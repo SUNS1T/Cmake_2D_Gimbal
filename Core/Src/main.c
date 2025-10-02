@@ -119,7 +119,7 @@ int main(void)
     /* USER CODE BEGIN 2 */
     struct UltraSerial Usart1;
     uint8_t Header[] = {0xAA , 0x55};//包头
-    float Data[2] = {25.67 , 22.11};
+    float Data[3] = {3.14 , 1.28 ,5.67};//3FA3D70A 4048F5C3
     Serial_Registration(&Usart1 , USART1);
 
     Serial_PackTranAgrDecide(&Usart1 , 2 , Header);
@@ -131,7 +131,7 @@ int main(void)
     {
         // 发送字符串
         // Serial_Printf(&Usart1 , "Hello STM32!\r\n");
-        Serial_SendPacket_float(&Usart1 , 2 , Data , 0xFF );
+        Serial_SendPacket_float(&Usart1 , 3 , Data , 0xFF );
         // 延时
         for (volatile uint32_t i = 0; i < 1000000; i++)
             ;

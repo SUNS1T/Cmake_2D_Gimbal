@@ -592,8 +592,6 @@ Discarded input sections
  .bss           0x00000000        0x0 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
  .rodata.CHANNEL_OFFSET_TAB
                 0x00000000        0x7 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
- .text.Serial_SendArray
-                0x00000000       0x3c CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
  .text.Serial_SendString
                 0x00000000       0x3c CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
  .text.Serial_Pow
@@ -617,6 +615,8 @@ Discarded input sections
                 0x00000000       0x54 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
  .text.Serial_Error
                 0x00000000       0x54 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+ .text.GetFloatData
+                0x00000000        0xc CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
  .debug_macro   0x00000000      0xafc CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
  .debug_macro   0x00000000       0x2e CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
  .debug_macro   0x00000000       0x22 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
@@ -1760,7 +1760,7 @@ LOAD C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/
                 0x08000000                g_pfnVectors
                 0x0800010c                        . = ALIGN (0x4)
 
-.text           0x0800010c     0x11ac
+.text           0x0800010c     0x1278
                 0x0800010c                        . = ALIGN (0x4)
  *(.text)
  .text          0x0800010c       0x40 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtbegin.o
@@ -1850,237 +1850,240 @@ LOAD C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/
  .text.Serial_SendByte
                 0x080008e6       0x34 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
                 0x080008e6                Serial_SendByte
+ .text.Serial_SendArray
+                0x0800091a       0x3c CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+                0x0800091a                Serial_SendArray
  .text.Serial_SendPacket_float
-                0x0800091a       0xd0 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
-                0x0800091a                Serial_SendPacket_float
- *fill*         0x080009ea        0x2 
+                0x08000956       0xb8 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+                0x08000956                Serial_SendPacket_float
+ *fill*         0x08000a0e        0x2 
  .text.USART1_IRQHandler
-                0x080009ec      0x108 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
-                0x080009ec                USART1_IRQHandler
+                0x08000a10      0x1ac CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+                0x08000a10                USART1_IRQHandler
  .text.__NVIC_SetPriorityGrouping
-                0x08000af4       0x48 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000bbc       0x48 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.__NVIC_GetPriorityGrouping
-                0x08000b3c       0x1c CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000c04       0x1c CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.__NVIC_SetPriority
-                0x08000b58       0x54 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000c20       0x54 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.NVIC_EncodePriority
-                0x08000bac       0x64 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000c74       0x64 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.LL_RCC_HSI_Enable
-                0x08000c10       0x1c CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000cd8       0x1c CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.LL_RCC_HSI_IsReady
-                0x08000c2c       0x24 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000cf4       0x24 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.LL_RCC_HSI_SetCalibTrimming
-                0x08000c50       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000d18       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.LL_RCC_SetSysClkSource
-                0x08000c78       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000d40       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.LL_RCC_GetSysClkSource
-                0x08000ca0       0x18 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000d68       0x18 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.LL_RCC_SetAHBPrescaler
-                0x08000cb8       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000d80       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.LL_RCC_SetAPB1Prescaler
-                0x08000ce0       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000da8       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.LL_RCC_SetAPB2Prescaler
-                0x08000d08       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000dd0       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.LL_APB1_GRP1_EnableClock
-                0x08000d30       0x30 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000df8       0x30 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.LL_APB2_GRP1_EnableClock
-                0x08000d60       0x30 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000e28       0x30 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.LL_FLASH_SetLatency
-                0x08000d90       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000e58       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.LL_FLASH_GetLatency
-                0x08000db8       0x18 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000e80       0x18 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .text.LL_GPIO_AF_Remap_SWJ_NOJTAG
-                0x08000dd0       0x20 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
- .text.main     0x08000df0       0xa4 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
-                0x08000df0                main
+                0x08000e98       0x20 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+ .text.main     0x08000eb8       0xa8 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000eb8                main
  .text.SystemClock_Config
-                0x08000e94       0x64 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
-                0x08000e94                SystemClock_Config
+                0x08000f60       0x64 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x08000f60                SystemClock_Config
  .text.LL_APB2_GRP1_EnableClock
-                0x08000ef8       0x30 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
+                0x08000fc4       0x30 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
  .text.MX_GPIO_Init
-                0x08000f28       0x1a CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
-                0x08000f28                MX_GPIO_Init
- *fill*         0x08000f42        0x2 
+                0x08000ff4       0x1a CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
+                0x08000ff4                MX_GPIO_Init
+ *fill*         0x0800100e        0x2 
  .text.__NVIC_GetPriorityGrouping
-                0x08000f44       0x1c CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+                0x08001010       0x1c CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
  .text.__NVIC_EnableIRQ
-                0x08000f60       0x38 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+                0x0800102c       0x38 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
  .text.__NVIC_SetPriority
-                0x08000f98       0x54 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+                0x08001064       0x54 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
  .text.NVIC_EncodePriority
-                0x08000fec       0x64 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+                0x080010b8       0x64 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
  .text.LL_APB2_GRP1_EnableClock
-                0x08001050       0x30 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+                0x0800111c       0x30 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
  .text.LL_USART_Enable
-                0x08001080       0x1e CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+                0x0800114c       0x1e CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
  .text.LL_USART_ConfigAsyncMode
-                0x0800109e       0x2a CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+                0x0800116a       0x2a CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
  .text.MX_USART1_UART_Init
-                0x080010c8       0xd0 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
-                0x080010c8                MX_USART1_UART_Init
+                0x08001194       0xd0 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+                0x08001194                MX_USART1_UART_Init
  .text.NMI_Handler
-                0x08001198        0x8 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
-                0x08001198                NMI_Handler
+                0x08001264        0x8 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+                0x08001264                NMI_Handler
  .text.HardFault_Handler
-                0x080011a0        0x8 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
-                0x080011a0                HardFault_Handler
+                0x0800126c        0x8 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+                0x0800126c                HardFault_Handler
  .text.MemManage_Handler
-                0x080011a8        0x8 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
-                0x080011a8                MemManage_Handler
+                0x08001274        0x8 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+                0x08001274                MemManage_Handler
  .text.BusFault_Handler
-                0x080011b0        0x8 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
-                0x080011b0                BusFault_Handler
+                0x0800127c        0x8 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+                0x0800127c                BusFault_Handler
  .text.UsageFault_Handler
-                0x080011b8        0x8 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
-                0x080011b8                UsageFault_Handler
+                0x08001284        0x8 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+                0x08001284                UsageFault_Handler
  .text.SVC_Handler
-                0x080011c0        0xc CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
-                0x080011c0                SVC_Handler
+                0x0800128c        0xc CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+                0x0800128c                SVC_Handler
  .text.DebugMon_Handler
-                0x080011cc        0xc CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
-                0x080011cc                DebugMon_Handler
+                0x08001298        0xc CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+                0x08001298                DebugMon_Handler
  .text.PendSV_Handler
-                0x080011d8        0xc CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
-                0x080011d8                PendSV_Handler
+                0x080012a4        0xc CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+                0x080012a4                PendSV_Handler
  .text.SysTick_Handler
-                0x080011e4        0xc CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
-                0x080011e4                SysTick_Handler
+                0x080012b0        0xc CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+                0x080012b0                SysTick_Handler
  .text.Reset_Handler
-                0x080011f0       0x48 CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
-                0x080011f0                Reset_Handler
+                0x080012bc       0x48 CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
+                0x080012bc                Reset_Handler
  .text.Default_Handler
-                0x08001238        0x2 CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
-                0x08001238                RTC_Alarm_IRQHandler
-                0x08001238                EXTI2_IRQHandler
-                0x08001238                TIM1_CC_IRQHandler
-                0x08001238                PVD_IRQHandler
-                0x08001238                EXTI3_IRQHandler
-                0x08001238                EXTI0_IRQHandler
-                0x08001238                I2C2_EV_IRQHandler
-                0x08001238                ADC1_2_IRQHandler
-                0x08001238                SPI1_IRQHandler
-                0x08001238                TAMPER_IRQHandler
-                0x08001238                DMA1_Channel4_IRQHandler
-                0x08001238                USART3_IRQHandler
-                0x08001238                RTC_IRQHandler
-                0x08001238                DMA1_Channel7_IRQHandler
-                0x08001238                CAN1_RX1_IRQHandler
-                0x08001238                TIM4_IRQHandler
-                0x08001238                I2C1_EV_IRQHandler
-                0x08001238                DMA1_Channel6_IRQHandler
-                0x08001238                TIM3_IRQHandler
-                0x08001238                RCC_IRQHandler
-                0x08001238                TIM1_TRG_COM_IRQHandler
-                0x08001238                DMA1_Channel1_IRQHandler
-                0x08001238                Default_Handler
-                0x08001238                EXTI15_10_IRQHandler
-                0x08001238                EXTI9_5_IRQHandler
-                0x08001238                SPI2_IRQHandler
-                0x08001238                DMA1_Channel5_IRQHandler
-                0x08001238                EXTI4_IRQHandler
-                0x08001238                USB_LP_CAN1_RX0_IRQHandler
-                0x08001238                USB_HP_CAN1_TX_IRQHandler
-                0x08001238                DMA1_Channel3_IRQHandler
-                0x08001238                TIM1_UP_IRQHandler
-                0x08001238                WWDG_IRQHandler
-                0x08001238                TIM2_IRQHandler
-                0x08001238                TIM1_BRK_IRQHandler
-                0x08001238                EXTI1_IRQHandler
-                0x08001238                USART2_IRQHandler
-                0x08001238                I2C2_ER_IRQHandler
-                0x08001238                DMA1_Channel2_IRQHandler
-                0x08001238                CAN1_SCE_IRQHandler
-                0x08001238                FLASH_IRQHandler
-                0x08001238                I2C1_ER_IRQHandler
-                0x08001238                USBWakeUp_IRQHandler
- *fill*         0x0800123a        0x2 
+                0x08001304        0x2 CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
+                0x08001304                RTC_Alarm_IRQHandler
+                0x08001304                EXTI2_IRQHandler
+                0x08001304                TIM1_CC_IRQHandler
+                0x08001304                PVD_IRQHandler
+                0x08001304                EXTI3_IRQHandler
+                0x08001304                EXTI0_IRQHandler
+                0x08001304                I2C2_EV_IRQHandler
+                0x08001304                ADC1_2_IRQHandler
+                0x08001304                SPI1_IRQHandler
+                0x08001304                TAMPER_IRQHandler
+                0x08001304                DMA1_Channel4_IRQHandler
+                0x08001304                USART3_IRQHandler
+                0x08001304                RTC_IRQHandler
+                0x08001304                DMA1_Channel7_IRQHandler
+                0x08001304                CAN1_RX1_IRQHandler
+                0x08001304                TIM4_IRQHandler
+                0x08001304                I2C1_EV_IRQHandler
+                0x08001304                DMA1_Channel6_IRQHandler
+                0x08001304                TIM3_IRQHandler
+                0x08001304                RCC_IRQHandler
+                0x08001304                TIM1_TRG_COM_IRQHandler
+                0x08001304                DMA1_Channel1_IRQHandler
+                0x08001304                Default_Handler
+                0x08001304                EXTI15_10_IRQHandler
+                0x08001304                EXTI9_5_IRQHandler
+                0x08001304                SPI2_IRQHandler
+                0x08001304                DMA1_Channel5_IRQHandler
+                0x08001304                EXTI4_IRQHandler
+                0x08001304                USB_LP_CAN1_RX0_IRQHandler
+                0x08001304                USB_HP_CAN1_TX_IRQHandler
+                0x08001304                DMA1_Channel3_IRQHandler
+                0x08001304                TIM1_UP_IRQHandler
+                0x08001304                WWDG_IRQHandler
+                0x08001304                TIM2_IRQHandler
+                0x08001304                TIM1_BRK_IRQHandler
+                0x08001304                EXTI1_IRQHandler
+                0x08001304                USART2_IRQHandler
+                0x08001304                I2C2_ER_IRQHandler
+                0x08001304                DMA1_Channel2_IRQHandler
+                0x08001304                CAN1_SCE_IRQHandler
+                0x08001304                FLASH_IRQHandler
+                0x08001304                I2C1_ER_IRQHandler
+                0x08001304                USBWakeUp_IRQHandler
+ *fill*         0x08001306        0x2 
  .text.__libc_init_array
-                0x0800123c       0x48 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
-                0x0800123c                __libc_init_array
- .text.memcpy   0x08001284       0x1c C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
-                0x08001284                memcpy
+                0x08001308       0x48 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
+                0x08001308                __libc_init_array
+ .text.memcpy   0x08001350       0x1c C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
+                0x08001350                memcpy
  *(.glue_7)
- .glue_7        0x080012a0        0x0 linker stubs
+ .glue_7        0x0800136c        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x080012a0        0x0 linker stubs
+ .glue_7t       0x0800136c        0x0 linker stubs
  *(.eh_frame)
- .eh_frame      0x080012a0        0x0 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtbegin.o
+ .eh_frame      0x0800136c        0x0 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtbegin.o
  *(.init)
- .init          0x080012a0        0x4 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crti.o
-                0x080012a0                _init
- .init          0x080012a4        0x8 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtn.o
+ .init          0x0800136c        0x4 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crti.o
+                0x0800136c                _init
+ .init          0x08001370        0x8 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtn.o
  *(.fini)
- .fini          0x080012ac        0x4 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crti.o
-                0x080012ac                _fini
- .fini          0x080012b0        0x8 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtn.o
-                0x080012b8                        . = ALIGN (0x4)
-                0x080012b8                        _etext = .
+ .fini          0x08001378        0x4 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crti.o
+                0x08001378                _fini
+ .fini          0x0800137c        0x8 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtn.o
+                0x08001384                        . = ALIGN (0x4)
+                0x08001384                        _etext = .
 
-.vfp11_veneer   0x080012b8        0x0
- .vfp11_veneer  0x080012b8        0x0 linker stubs
+.vfp11_veneer   0x08001384        0x0
+ .vfp11_veneer  0x08001384        0x0 linker stubs
 
-.v4_bx          0x080012b8        0x0
- .v4_bx         0x080012b8        0x0 linker stubs
+.v4_bx          0x08001384        0x0
+ .v4_bx         0x08001384        0x0 linker stubs
 
-.iplt           0x080012b8        0x0
- .iplt          0x080012b8        0x0 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtbegin.o
+.iplt           0x08001384        0x0
+ .iplt          0x08001384        0x0 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtbegin.o
 
-.rodata         0x080012b8       0x20
-                0x080012b8                        . = ALIGN (0x4)
+.rodata         0x08001384       0x24
+                0x08001384                        . = ALIGN (0x4)
  *(.rodata)
- .rodata        0x080012b8        0x8 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+ .rodata        0x08001384        0xc CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  *(.rodata*)
  .rodata.AHBPrescTable
-                0x080012c0       0x10 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32f1xx.c.obj
-                0x080012c0                AHBPrescTable
+                0x08001390       0x10 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32f1xx.c.obj
+                0x08001390                AHBPrescTable
  .rodata.APBPrescTable
-                0x080012d0        0x8 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32f1xx.c.obj
-                0x080012d0                APBPrescTable
-                0x080012d8                        . = ALIGN (0x4)
+                0x080013a0        0x8 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32f1xx.c.obj
+                0x080013a0                APBPrescTable
+                0x080013a8                        . = ALIGN (0x4)
 
-.ARM.extab      0x080012d8        0x0
-                0x080012d8                        . = ALIGN (0x4)
+.ARM.extab      0x080013a8        0x0
+                0x080013a8                        . = ALIGN (0x4)
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x080012d8                        . = ALIGN (0x4)
+                0x080013a8                        . = ALIGN (0x4)
 
-.ARM            0x080012d8        0x0
-                0x080012d8                        . = ALIGN (0x4)
-                0x080012d8                        __exidx_start = .
+.ARM            0x080013a8        0x0
+                0x080013a8                        . = ALIGN (0x4)
+                0x080013a8                        __exidx_start = .
  *(.ARM.exidx*)
-                0x080012d8                        __exidx_end = .
-                0x080012d8                        . = ALIGN (0x4)
+                0x080013a8                        __exidx_end = .
+                0x080013a8                        . = ALIGN (0x4)
 
-.preinit_array  0x080012d8        0x0
-                0x080012d8                        . = ALIGN (0x4)
-                0x080012d8                        PROVIDE (__preinit_array_start = .)
+.preinit_array  0x080013a8        0x0
+                0x080013a8                        . = ALIGN (0x4)
+                0x080013a8                        PROVIDE (__preinit_array_start = .)
  *(.preinit_array*)
-                0x080012d8                        PROVIDE (__preinit_array_end = .)
-                0x080012d8                        . = ALIGN (0x4)
+                0x080013a8                        PROVIDE (__preinit_array_end = .)
+                0x080013a8                        . = ALIGN (0x4)
 
-.init_array     0x080012d8        0x4
-                0x080012d8                        . = ALIGN (0x4)
-                0x080012d8                        PROVIDE (__init_array_start = .)
+.init_array     0x080013a8        0x4
+                0x080013a8                        . = ALIGN (0x4)
+                0x080013a8                        PROVIDE (__init_array_start = .)
  *(SORT_BY_NAME(.init_array.*))
  *(.init_array*)
- .init_array    0x080012d8        0x4 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtbegin.o
-                0x080012dc                        PROVIDE (__init_array_end = .)
-                0x080012dc                        . = ALIGN (0x4)
+ .init_array    0x080013a8        0x4 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtbegin.o
+                0x080013ac                        PROVIDE (__init_array_end = .)
+                0x080013ac                        . = ALIGN (0x4)
 
-.fini_array     0x080012dc        0x4
-                0x080012dc                        . = ALIGN (0x4)
+.fini_array     0x080013ac        0x4
+                0x080013ac                        . = ALIGN (0x4)
                 [!provide]                        PROVIDE (__fini_array_start = .)
  *(SORT_BY_NAME(.fini_array.*))
  *(.fini_array*)
- .fini_array    0x080012dc        0x4 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtbegin.o
+ .fini_array    0x080013ac        0x4 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtbegin.o
                 [!provide]                        PROVIDE (__fini_array_end = .)
-                0x080012e0                        . = ALIGN (0x4)
-                0x080012e0                        _sidata = LOADADDR (.data)
+                0x080013b0                        . = ALIGN (0x4)
+                0x080013b0                        _sidata = LOADADDR (.data)
 
-.rel.dyn        0x080012e0        0x0
- .rel.iplt      0x080012e0        0x0 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtbegin.o
+.rel.dyn        0x080013b0        0x0
+ .rel.iplt      0x080013b0        0x0 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtbegin.o
 
-.data           0x20000000        0x4 load address 0x080012e0
+.data           0x20000000        0x4 load address 0x080013b0
                 0x20000000                        . = ALIGN (0x4)
                 0x20000000                        _sdata = .
  *(.data)
@@ -2092,10 +2095,10 @@ LOAD C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/
  *(.RamFunc*)
                 0x20000004                        . = ALIGN (0x4)
 
-.igot.plt       0x20000004        0x0 load address 0x080012e4
+.igot.plt       0x20000004        0x0 load address 0x080013b4
  .igot.plt      0x20000004        0x0 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtbegin.o
 
-.tdata          0x20000004        0x0 load address 0x080012e4
+.tdata          0x20000004        0x0 load address 0x080013b4
  *(.tdata .tdata.* .gnu.linkonce.td.*)
                 0x20000004                        . = ALIGN (0x4)
                 0x20000004                        _edata = .
@@ -2112,7 +2115,7 @@ LOAD C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/
                 [!provide]                        PROVIDE (__data_source_end = __tdata_source_end)
                 [!provide]                        PROVIDE (__data_source_size = (__data_source_end - __data_source))
 
-.tbss           0x20000004        0x0 load address 0x080012e4
+.tbss           0x20000004        0x0 load address 0x080013b4
                 0x20000004                        _sbss = .
                 0x20000004                        __bss_start__ = _sbss
  *(.tbss .tbss.*)
@@ -2129,43 +2132,55 @@ LOAD C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/
                 [!provide]                        PROVIDE (__arm32_tls_tcb_offset = MAX (0x8, __tls_align))
                 [!provide]                        PROVIDE (__arm64_tls_tcb_offset = MAX (0x10, __tls_align))
 
-.bss            0x20000008       0x64 load address 0x080012e4
+.bss            0x20000008       0xe4 load address 0x080013b4
  *(.bss)
  .bss           0x20000008       0x1c C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7-m/nofp/crtbegin.o
  *(.bss*)
- .bss.state.5   0x20000024        0x1 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+ .bss.RxData_Float
+                0x20000024       0x20 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+                0x20000024                RxData_Float
+ .bss.RxData_Double
+                0x20000044       0x20 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+                0x20000044                RxData_Double
+ .bss.RxData_Int
+                0x20000064       0x20 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+                0x20000064                RxData_Int
+ .bss.RxData_Uint
+                0x20000084       0x20 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+                0x20000084                RxData_Uint
+ .bss.state.5   0x200000a4        0x1 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
  .bss.HeaderRecieveRecord.4
-                0x20000025        0x1 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
- *fill*         0x20000026        0x2 
+                0x200000a5        0x1 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+ *fill*         0x200000a6        0x2 
  .bss.HeaderRecord.3
-                0x20000028        0x2 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
- *fill*         0x2000002a        0x6 
- .bss.frame.2   0x20000030       0x38 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+                0x200000a8        0x2 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+ *fill*         0x200000aa        0x6 
+ .bss.frame.2   0x200000b0       0x38 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
  .bss.expectedLength.1
-                0x20000068        0x1 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+                0x200000e8        0x1 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
  .bss.dataIndex.0
-                0x20000069        0x1 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+                0x200000e9        0x1 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
  *(COMMON)
-                0x2000006c                        . = ALIGN (0x4)
- *fill*         0x2000006a        0x2 
-                0x2000006c                        _ebss = .
-                0x2000006c                        __bss_end__ = _ebss
+                0x200000ec                        . = ALIGN (0x4)
+ *fill*         0x200000ea        0x2 
+                0x200000ec                        _ebss = .
+                0x200000ec                        __bss_end__ = _ebss
                 [!provide]                        PROVIDE (__bss_end = .)
                 [!provide]                        PROVIDE (__non_tls_bss_start = ADDR (.bss))
                 [!provide]                        PROVIDE (__bss_start = __tbss_start)
                 [!provide]                        PROVIDE (__bss_size = (__bss_end - __bss_start))
 
 ._user_heap_stack
-                0x2000006c      0x604 load address 0x080012e4
-                0x20000070                        . = ALIGN (0x8)
- *fill*         0x2000006c        0x4 
+                0x200000ec      0x604 load address 0x080013b4
+                0x200000f0                        . = ALIGN (0x8)
+ *fill*         0x200000ec        0x4 
                 [!provide]                        PROVIDE (end = .)
-                0x20000070                        PROVIDE (_end = .)
-                0x20000270                        . = (. + _Min_Heap_Size)
- *fill*         0x20000070      0x200 
-                0x20000670                        . = (. + _Min_Stack_Size)
- *fill*         0x20000270      0x400 
-                0x20000670                        . = ALIGN (0x8)
+                0x200000f0                        PROVIDE (_end = .)
+                0x200002f0                        . = (. + _Min_Heap_Size)
+ *fill*         0x200000f0      0x200 
+                0x200006f0                        . = (. + _Min_Stack_Size)
+ *fill*         0x200002f0      0x400 
+                0x200006f0                        . = ALIGN (0x8)
 
 /DISCARD/
  libc.a:*(*)
@@ -2224,37 +2239,37 @@ LOAD linker stubs
  .comment       0x00000043       0x44 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
  .comment       0x00000043       0x44 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
 
-.debug_info     0x00000000     0x40a6
+.debug_info     0x00000000     0x4125
  .debug_info    0x00000000      0x21b cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32f1xx.c.obj
  .debug_info    0x0000021b      0x59a cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c.obj
  .debug_info    0x000007b5      0x5c2 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usart.c.obj
  .debug_info    0x00000d77      0x54b cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c.obj
  .debug_info    0x000012c2      0x7e1 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c.obj
- .debug_info    0x00001aa3      0xab7 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
- .debug_info    0x0000255a      0xc81 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
- .debug_info    0x000031db      0x1a7 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
- .debug_info    0x00003382      0x983 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
- .debug_info    0x00003d05      0x145 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
- .debug_info    0x00003e4a       0x30 CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
- .debug_info    0x00003e7a      0x10b C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
- .debug_info    0x00003f85      0x121 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
+ .debug_info    0x00001aa3      0xb06 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+ .debug_info    0x000025a9      0xcb1 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+ .debug_info    0x0000325a      0x1a7 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
+ .debug_info    0x00003401      0x983 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+ .debug_info    0x00003d84      0x145 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+ .debug_info    0x00003ec9       0x30 CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
+ .debug_info    0x00003ef9      0x10b C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
+ .debug_info    0x00004004      0x121 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
 
-.debug_abbrev   0x00000000     0x1454
+.debug_abbrev   0x00000000     0x146d
  .debug_abbrev  0x00000000      0x13f cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32f1xx.c.obj
  .debug_abbrev  0x0000013f      0x20d cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c.obj
  .debug_abbrev  0x0000034c      0x1c7 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usart.c.obj
  .debug_abbrev  0x00000513      0x273 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c.obj
  .debug_abbrev  0x00000786      0x24e cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c.obj
- .debug_abbrev  0x000009d4      0x2b8 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
- .debug_abbrev  0x00000c8c      0x2a1 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
- .debug_abbrev  0x00000f2d      0x102 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
- .debug_abbrev  0x0000102f      0x1f7 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
- .debug_abbrev  0x00001226       0x80 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
- .debug_abbrev  0x000012a6       0x24 CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
- .debug_abbrev  0x000012ca       0xc9 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
- .debug_abbrev  0x00001393       0xc1 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
+ .debug_abbrev  0x000009d4      0x2d1 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+ .debug_abbrev  0x00000ca5      0x2a1 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+ .debug_abbrev  0x00000f46      0x102 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
+ .debug_abbrev  0x00001048      0x1f7 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+ .debug_abbrev  0x0000123f       0x80 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+ .debug_abbrev  0x000012bf       0x24 CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
+ .debug_abbrev  0x000012e3       0xc9 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
+ .debug_abbrev  0x000013ac       0xc1 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
 
-.debug_aranges  0x00000000      0x5a0
+.debug_aranges  0x00000000      0x5a8
  .debug_aranges
                 0x00000000       0x28 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32f1xx.c.obj
  .debug_aranges
@@ -2266,24 +2281,24 @@ LOAD linker stubs
  .debug_aranges
                 0x000001e8       0xf8 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c.obj
  .debug_aranges
-                0x000002e0       0xc0 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+                0x000002e0       0xc8 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
  .debug_aranges
-                0x000003a0       0xb8 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x000003a8       0xb8 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .debug_aranges
-                0x00000458       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
+                0x00000460       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
  .debug_aranges
-                0x00000480       0x58 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+                0x00000488       0x58 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
  .debug_aranges
-                0x000004d8       0x60 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+                0x000004e0       0x60 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
  .debug_aranges
-                0x00000538       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
+                0x00000540       0x28 CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
  .debug_aranges
-                0x00000560       0x20 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
+                0x00000568       0x20 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
  .debug_aranges
-                0x00000580       0x20 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
+                0x00000588       0x20 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
 
 .debug_rnglists
-                0x00000000      0x40e
+                0x00000000      0x408
  .debug_rnglists
                 0x00000000       0x1a cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32f1xx.c.obj
  .debug_rnglists
@@ -2295,21 +2310,21 @@ LOAD linker stubs
  .debug_rnglists
                 0x0000015f       0xb7 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c.obj
  .debug_rnglists
-                0x00000216       0x99 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+                0x00000216       0x93 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
  .debug_rnglists
-                0x000002af       0x86 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+                0x000002a9       0x86 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
  .debug_rnglists
-                0x00000335       0x19 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
+                0x0000032f       0x19 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
  .debug_rnglists
-                0x0000034e       0x3e CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+                0x00000348       0x3e CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
  .debug_rnglists
-                0x0000038c       0x43 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+                0x00000386       0x43 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
  .debug_rnglists
-                0x000003cf       0x19 CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
+                0x000003c9       0x19 CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
  .debug_rnglists
-                0x000003e8       0x13 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
+                0x000003e2       0x13 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
  .debug_rnglists
-                0x000003fb       0x13 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
+                0x000003f5       0x13 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
 
 .debug_macro    0x00000000    0x12a89
  .debug_macro   0x00000000       0xbc cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32f1xx.c.obj
@@ -2375,50 +2390,50 @@ LOAD linker stubs
  .debug_macro   0x0001281f      0x135 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
  .debug_macro   0x00012954      0x135 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
 
-.debug_line     0x00000000     0x51b8
+.debug_line     0x00000000     0x51c3
  .debug_line    0x00000000      0x4b0 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32f1xx.c.obj
  .debug_line    0x000004b0      0x76a cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c.obj
  .debug_line    0x00000c1a      0x6e6 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usart.c.obj
  .debug_line    0x00001300      0x899 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c.obj
  .debug_line    0x00001b99      0x942 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c.obj
- .debug_line    0x000024db      0xadc CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
- .debug_line    0x00002fb7      0xa16 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
- .debug_line    0x000039cd      0x612 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
- .debug_line    0x00003fdf      0x75a CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
- .debug_line    0x00004739      0x69b CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
- .debug_line    0x00004dd4       0x78 CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
- .debug_line    0x00004e4c      0x165 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
- .debug_line    0x00004fb1      0x207 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
+ .debug_line    0x000024db      0xae7 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+ .debug_line    0x00002fc2      0xa16 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+ .debug_line    0x000039d8      0x612 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
+ .debug_line    0x00003fea      0x75a CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+ .debug_line    0x00004744      0x69b CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+ .debug_line    0x00004ddf       0x78 CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
+ .debug_line    0x00004e57      0x165 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
+ .debug_line    0x00004fbc      0x207 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
 
-.debug_str      0x00000000    0x5fae8
- .debug_str     0x00000000    0x5fae8 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32f1xx.c.obj
+.debug_str      0x00000000    0x5fb1e
+ .debug_str     0x00000000    0x5fb1e cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32f1xx.c.obj
                               0x547ff (size before relaxing)
- .debug_str     0x0005fae8    0x56142 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c.obj
- .debug_str     0x0005fae8    0x5754a cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usart.c.obj
- .debug_str     0x0005fae8    0x55cc9 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c.obj
- .debug_str     0x0005fae8    0x569be cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c.obj
- .debug_str     0x0005fae8    0x5d6be CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
- .debug_str     0x0005fae8    0x5da87 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
- .debug_str     0x0005fae8    0x59b42 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
- .debug_str     0x0005fae8    0x5a0fd CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
- .debug_str     0x0005fae8    0x59b58 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
- .debug_str     0x0005fae8       0xbc CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
- .debug_str     0x0005fae8      0x26a C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
- .debug_str     0x0005fae8      0x227 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
+ .debug_str     0x0005fb1e    0x56142 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c.obj
+ .debug_str     0x0005fb1e    0x5754a cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usart.c.obj
+ .debug_str     0x0005fb1e    0x55cc9 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c.obj
+ .debug_str     0x0005fb1e    0x569be cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c.obj
+ .debug_str     0x0005fb1e    0x5d6fb CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+ .debug_str     0x0005fb1e    0x5da87 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+ .debug_str     0x0005fb1e    0x59b42 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
+ .debug_str     0x0005fb1e    0x5a0fd CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+ .debug_str     0x0005fb1e    0x59b58 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+ .debug_str     0x0005fb1e       0xbc CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj
+ .debug_str     0x0005fb1e      0x26a C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
+ .debug_str     0x0005fb1e      0x227 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
 
-.debug_frame    0x00000000     0x1490
+.debug_frame    0x00000000     0x14b4
  .debug_frame   0x00000000       0x58 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32f1xx.c.obj
  .debug_frame   0x00000058      0x170 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c.obj
  .debug_frame   0x000001c8      0x234 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usart.c.obj
  .debug_frame   0x000003fc      0x34c cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c.obj
  .debug_frame   0x00000748      0x400 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c.obj
- .debug_frame   0x00000b48      0x378 CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
- .debug_frame   0x00000ec0      0x2dc CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
- .debug_frame   0x0000119c       0x54 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
- .debug_frame   0x000011f0      0x144 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
- .debug_frame   0x00001334      0x108 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
- .debug_frame   0x0000143c       0x2c C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
- .debug_frame   0x00001468       0x28 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
+ .debug_frame   0x00000b48      0x39c CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj
+ .debug_frame   0x00000ee4      0x2dc CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj
+ .debug_frame   0x000011c0       0x54 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj
+ .debug_frame   0x00001214      0x144 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj
+ .debug_frame   0x00001358      0x108 CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj
+ .debug_frame   0x00001460       0x2c C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-init.o)
+ .debug_frame   0x0000148c       0x28 C:/ST/STM32CubeCLT_1.19.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-memcpy-stub.o)
 
 .debug_line_str
                 0x00000000       0xa0

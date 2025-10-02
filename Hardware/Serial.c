@@ -1,5 +1,8 @@
 #include "Serial.h"
-
+float RxData_Float[header_length];
+float RxData_Double[header_length];
+float RxData_Int[header_length];
+float RxData_Uint[header_length];
 //[帧头]
 /**
  * 函    数：电机设置地址
@@ -134,6 +137,7 @@ void Serial_SendPacket_float(struct UltraSerial *Serial, uint8_t DataBits_, floa
 	if (DataLength > 32)
 		return; // 防止溢出
 
+			
 	for (int i = 0; i < Serial->headerlen; i++)
 	{
 		Serial_SendByte(Serial, Serial->header[i]);
@@ -142,18 +146,10 @@ void Serial_SendPacket_float(struct UltraSerial *Serial, uint8_t DataBits_, floa
 	Serial_SendByte(Serial, 0xFF);
 	Serial_SendByte(Serial, 0x03);
 	Serial_SendByte(Serial, DataLength);
-	for (int i = 0; i < DataBits_; i++)
-	{
-		uint8_t *floatptr = (uint8_t *)&Data[i];
 
-		// 发送每个浮点数的 4 个字节
-		for (int j = 0; j < sizeof(float); j++)
-		{
-			// Serial_Printf(Serial ,"Sending byte: 0x%02X\n", floatptr[j]);
-			Serial_SendByte(Serial, floatptr[j]);
-		}
-	}
-
+	memcpy(Serial->data.rawData , Data , DataBits_*4 );
+	
+	Serial_SendArray(Serial , Serial->data.rawData , DataBits_*4);
 	//  if(Serial == NULL || Data == NULL || DataBits_ == 0) return;
 
 	// uint8_t dataLength = DataBits_ * sizeof(float);

@@ -24,10 +24,7 @@
 
 // extern uint8_t SerFuncData[16];//无线串口接收的数据，数据格式见前页
 
-float RxData_Float[header_length];
-float RxData_Double[header_length];
-float RxData_Int[header_length];
-float RxData_Uint[header_length];
+
 
 struct UltraSerial
 {
@@ -47,9 +44,9 @@ struct UltraSerial
     uint8_t datatype;//数据类型0x01->uint|0x02->int|0x03->float|0x04->double
     uint8_t datalength;//数据长度
     union {
-        float fValue;
-        double dValue;
-        int32_t  i32Value;         // 32位整数
+        float fValue[8];
+        double dValue[8];
+        int32_t  i32Value[8];         // 32位整数
         uint8_t rawData[32];
     } data;
     uint8_t checksum;   // 校验和

@@ -1,0 +1,19 @@
+# ninja log v5
+16	222	7810914707075453	CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Motor.c.obj	8341b186d85d3c5a
+96	257	7810914707635717	CMakeFiles/Cmake_2D_Gimbal.dir/startup_stm32f103xb.s.obj	690be277e672add1
+37	405	7810914708375538	CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/gpio.c.obj	9cb46ba549bcfbf7
+206	479	7810914709891410	cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c.obj	1e56e17621480133
+71	279	7810914707852914	CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/sysmem.c.obj	765728300fac03d2
+176	479	7810914709781115	cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dma.c.obj	5d148222d95cdddd
+84	410	7810914708977478	CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/syscalls.c.obj	675447f58d1abc37
+108	411	7810914709177980	cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Core/Src/system_stm32f1xx.c.obj	2fbc874c0745f527
+48	404	7810914708485845	CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/usart.c.obj	8930fb736b5726f8
+5	185	7810915835556352	CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/stm32f1xx_it.c.obj	5a439079fb55c215
+16	226	7810915379118635	CMakeFiles/Cmake_2D_Gimbal.dir/Core/Src/main.c.obj	9961a4171d54e5a6
+120	412	7810914709207138	cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c.obj	41fd2c56ca554dc6
+133	412	7810914709197236	cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_pwr.c.obj	f0aa5e1577d2dde5
+160	480	7810914709771938	cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usart.c.obj	7029da40694d7d9a
+190	478	7810914709901438	cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c.obj	6ecc871989b0d0cd
+146	480	7810914709851307	cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_exti.c.obj	f84d8ae30ba52bef
+5	227	7810915417846960	CMakeFiles/Cmake_2D_Gimbal.dir/Hardware/Serial.c.obj	b5d9ec3abfd84ffd
+186	337	7810915837030209	Cmake_2D_Gimbal.elf	95c277ae7c968819

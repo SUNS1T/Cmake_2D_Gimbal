@@ -38,6 +38,12 @@ add_executable(${CMAKE_PROJECT_NAME}
     Hardware/Serial.c
     Hardware/Motor.h
     Hardware/Motor.c
+    Hardware/OLED_Data.c
+    Hardware/OLED_Data.h
+    Hardware/OLED.c
+    Hardware/OLED.h
+    Hardware/Pid.h
+    Hardware/Pid.h
 )
 
 # Add STM32CubeMX generated sources

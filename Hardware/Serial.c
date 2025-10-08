@@ -3,6 +3,8 @@ float RxData_Float[header_length];
 float RxData_Double[header_length];
 float RxData_Int[header_length];
 float RxData_Uint[header_length];
+
+uint8_t RxFlag = 0;
 //[帧头]
 /**
  * 函    数：电机设置地址
@@ -134,10 +136,12 @@ void Serial_SendPacket_float(struct UltraSerial *Serial, uint8_t DataBits_, floa
 	if (Serial == NULL || Data == NULL || DataBits_ == 0)
 		return;
 	uint8_t DataLength = DataBits_ * sizeof(float);
+	uint8_t CrcNumLength = 0 , Temp = {0xFF , 0x03};
+	CrcNumLength = Serial->headerlen + 4 + ( DataBits_ * 4 );
+	uint8_t CheckSum[CrcNumLength] ;
 	if (DataLength > 32)
 		return; // 防止溢出
 
-			
 	for (int i = 0; i < Serial->headerlen; i++)
 	{
 		Serial_SendByte(Serial, Serial->header[i]);
@@ -147,9 +151,17 @@ void Serial_SendPacket_float(struct UltraSerial *Serial, uint8_t DataBits_, floa
 	Serial_SendByte(Serial, 0x03);
 	Serial_SendByte(Serial, DataLength);
 
-	memcpy(Serial->data.rawData , Data , DataBits_*4 );
+	memcpy(Serial->data.rawData, Data, DataBits_ * 4);//发送数据
+
+	Serial_SendArray(Serial, Serial->data.rawData, DataBits_ * 4);
+	memcpy(CheckSum , Serial->header , sizeof(Serial->header));
+	memcpy(CheckSum + sizeof(Serial->header)  , (void *)func_ , 1);
+	memcpy(CheckSum + sizeof(Serial->header) + 1, (void *)Temp , 2);
+	memcpy(CheckSum + sizeof(Serial->header) + 3, (void *)DataLength , 1);
+	memcpy(CheckSum + sizeof(Serial->header) + 4, Serial->data.rawData , 1);
 	
-	Serial_SendArray(Serial , Serial->data.rawData , DataBits_*4);
+	Serial->checksum = CalculateChecksum(CheckSum , sizeof(CheckSum));
+	Serial_SendByte(Serial , Serial->checksum );
 	//  if(Serial == NULL || Data == NULL || DataBits_ == 0) return;
 
 	// uint8_t dataLength = DataBits_ * sizeof(float);
@@ -255,10 +267,9 @@ void Serial_Error(struct UltraSerial *Serial, const char *message, ...) // 打�
 /*---------------串口中断接收部分---------------*/
 void GetFloatData()
 {
-
 }
 
-void USART1_IRQHandler()
+void USART1_IRQHandler(void)
 {
 	// 检查是否是接收数据寄存器非空（RXNE）中断
 	if (LL_USART_IsActiveFlag_RXNE(USART1))
@@ -273,90 +284,98 @@ void USART1_IRQHandler()
 		static uint8_t expectedLength = 0;
 		static uint8_t HeaderRecieveRecord = 0;
 		static uint8_t HeaderRecord[HEADERLENGTH];
-		uint8_t Header[2] = {0xAA , 0x55};
+		uint8_t Header[2] = {0xAA, 0x55};
 		switch (state)
 		{
-			case STATE_HEADER:
-				// if (receivedByte == 0xAA)
-				// {
-			
-				// 	state = STATE_HEADER2;
-				// }
-				if (HeaderRecieveRecord <= HEADERLENGTH)
+		case STATE_HEADER:
+			// if (receivedByte == 0xAA)
+			// {
+
+			// 	state = STATE_HEADER2;
+			// }
+			if (HeaderRecieveRecord <= HEADERLENGTH)
+			{
+				HeaderRecord[HeaderRecieveRecord] = receivedByte;
+				HeaderRecieveRecord++;
+			}
+			else
+			{
+				for (int i = 0; i < HEADERLENGTH; i++)
 				{
-					HeaderRecord[HeaderRecieveRecord] = receivedByte;
-					HeaderRecieveRecord++;
+					if (HeaderRecord[i] != Header[i])
+						return;
 				}
-				else
+				state = STATE_FUNC;
+			}
+			break;
+		case STATE_FUNC:
+			frame.func = receivedByte;
+			state = STATE_DATA_LENGTH;
+			break;
+		case STATE_EMPTY:
+			frame.Empty1 = receivedByte;
+			state = STATE_DATA_LENGTH;
+			break;
+		case STATE_DATA_TYPE:
+			frame.datatype = receivedByte;
+			state = STATE_DATA_LENGTH;
+			break;
+
+		case STATE_DATA_LENGTH:
+			frame.datalength = receivedByte;
+
+			expectedLength = receivedByte;
+			dataIndex = 0;
+			state = STATE_DATA;
+			break;
+
+		case STATE_DATA:
+			frame.data.rawData[dataIndex++] = receivedByte;
+			if (dataIndex >= expectedLength)
+			{
+				switch (frame.datatype)
 				{
-					for (int i = 0; i < HEADERLENGTH; i++)
-					{
-						if (HeaderRecord[i] != Header[i])
-							return;
-					}
-					state = STATE_DATA_TYPE;
+				case 0x01:
+					/* code */
+					memcpy(RxData_Uint, frame.data.UValue, sizeof(frame.data.rawData));
+					break;
+				case 0x02:
+					/* code */
+					memcpy(RxData_Int, frame.data.IValue, sizeof(frame.data.rawData));
+					break;
+				case 0x03:
+					/* code */
+					memcpy(RxData_Float, frame.data.fValue, sizeof(frame.data.rawData));
+					break;
+				case 0x04:
+					/* code */
+					memcpy(RxData_Double, frame.data.dValue, sizeof(frame.data.rawData));
+					break;
+				default:
+					break;
 				}
-				break;
-			case STATE_DATA_TYPE:
-				frame.datatype = receivedByte;
-				state = STATE_DATA_LENGTH;
-				break;
-			
-			case STATE_DATA_LENGTH:
-				frame.datalength = receivedByte;
-				
-				expectedLength = receivedByte;
-				dataIndex = 0;
-				state = STATE_DATA;
-				break;
-			
-			case STATE_DATA:
-				frame.data.rawData[dataIndex++] = receivedByte;
-				if (dataIndex >= expectedLength)
-				{
-					switch (frame.datatype)
-					{
-					case 0x01:
-						/* code */
-						memcpy(  RxData_Uint , frame.data.rawData , sizeof(frame.data.rawData) );
-						break;
-					case 0x02:
-						/* code */
-						memcpy(  RxData_Int  , frame.data.rawData , sizeof(frame.data.rawData) );
-						break;
-					case 0x03:
-						/* code */
-						memcpy( RxData_Float , frame.data.rawData , sizeof(frame.data.rawData) );
-						break;
-					case 0x04:
-						/* code */
-						memcpy(RxData_Double , frame.data.rawData , sizeof(frame.data.rawData) );
-						break;
-					default:
-						break;
-					}
-					state = STATE_HEADER;
-				}	
-				break;
-			
-				// case STATE_CHECKSUM:
-				// 	frame.checksum = receivedByte;
-			
-				// 	// 验证校验和
-				// 	uint8_t calcChecksum = CalculateChecksum(
-				// 		(uint8_t *)&frame + 2, sizeof(frame) - 3);
-			
-				// 	if (calcChecksum == frame.checksum && frame.dataType == 0x01)
-				// 	{
-				// 		state = STATE_HEADER1;
-				// 		return frame.data.fValue;
-				// 	}
-				// 	else
-				// 	{
-				// 		state = STATE_HEADER1;
-				// 		return 0.0f; // 错误处理
-				// 	}
-				// 	break;
+				state = STATE_CHECKSUM;
+			}
+			break;
+
+			// case STATE_CHECKSUM:
+			// 	frame.checksum = receivedByte;
+
+			// 	// 验证校验和
+			// 	uint8_t calcChecksum = CalculateChecksum(
+			// 		(uint8_t *)&frame + 2, sizeof(frame) - 3);
+
+			// 	if (calcChecksum == frame.checksum && frame.dataType == 0x01)
+			// 	{
+			// 		state = STATE_HEADER1;
+			// 		return frame.data.fValue;
+			// 	}
+			// 	else
+			// 	{
+			// 		state = STATE_HEADER1;
+			// 		return 0.0f; // 错误处理
+			// 	}
+			// 	break;
 		}
 	}
 }

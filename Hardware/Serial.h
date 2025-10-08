@@ -62,9 +62,10 @@ typedef struct
     uint8_t datatype;//数据类型0x01->uint|0x02->int|0x03->float|0x04->double
     uint8_t datalength;//数据长度
     union {
-        float fValue;
-        double dValue;
-        int32_t  i32Value;         // 32位整数
+        float fValue[8];
+        double dValue[8];
+        int32_t  UValue[8];         // 32位整数
+        uint32_t  IValue[8];         // 32位整数
         uint8_t rawData[32];
     } data;
     
@@ -78,8 +79,7 @@ typedef enum {
     STATE_DATA_TYPE,
     STATE_DATA_LENGTH,
     STATE_DATA,
-    STATE_CHECKSUM,
-    STATE_FREE
+    STATE_CHECKSUM
 } ParserState_t;
 
 typedef enum {
@@ -110,6 +110,8 @@ typedef enum {
 
 // extern uint8_t Serial_TxPacket[];
 // extern uint8_t Serial_RxPacket[];
+
+extern struct UltraSerial Usart1, Usart2;
 
 void Serial_Registration(struct UltraSerial * Serial , USART_TypeDef * Port_ );
 void Serial_SendByte(struct UltraSerial * Serial , uint8_t Byte);

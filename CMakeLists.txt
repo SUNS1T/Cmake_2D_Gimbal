@@ -44,7 +44,11 @@ add_executable(${CMAKE_PROJECT_NAME}
     Hardware/OLED.h
     Hardware/Pid.h
     Hardware/Pid.h
+    Hardware/Timer.c
+    Hardware/Timer.h
 )
+
+target_link_options(${CMAKE_PROJECT_NAME} PRIVATE -u _printf_float)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
@@ -82,3 +86,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 include_directories(
     ./Hardware
 )
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -u _printf_float -mfloat-abi=soft")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -u _printf_float -mfloat-abi=soft")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  -u _printf_float -mfloat-abi=soft")

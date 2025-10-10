@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug STM32F103C8T6",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "build/Debug/${workspaceFolderBasename}.elf",  // 你的程序路径
+            "miDebuggerPath": "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin/arm-none-eabi-gdb.exe",  // GDB 的路径
+            "miDebuggerServerAddress": "localhost:3333",  // OpenOCD 的 GDB 服务器地址
+            "setupCommands": [
+                {
+                    "text": "-target-select remote localhost:3333",
+                    "description": "Connect to GDB server"
+                }
+            ],
+            "preLaunchTask": "build",  // 先编译
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false
+        }
+    ]
+}

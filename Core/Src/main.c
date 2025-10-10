@@ -16,8 +16,8 @@
  ******************************************************************************
  */
 /*
-大齿轮是100:10 -> RigthSocket 地址0x02
-小的是50:10 -> LeftSocket 地址0x01
+大齿轮是100:10 -> RigthSocket 地址0x02 Down
+小的是50:10 -> LeftSocket 地址0x01 Up
 */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
@@ -31,6 +31,8 @@
 #include "Serial.h"
 #include "Motor.h"
 #include "OLED.h"
+#include "Timer.h"
+#include "math.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,7 +59,12 @@ extern volatile int8_t DownMotorLocateDataGetFlag; // 下面电机接收数据�
 extern volatile uint8_t UpMotorLocation_Array[6];
 extern volatile int32_t UpMotorLocation;
 extern volatile int8_t UpMotorLocateDataGetFlag; // 上面电机接收数据标志位
-struct UltraSerial Usart1, Usart2 , Usart3;
+struct UltraSerial Usart1, Usart2, Usart3;
+extern volatile int oledupdate_state;
+extern volatile int TurningUpdate_state;
+extern volatile int TurningDowndate_state;
+volatile float DownLocation;//x轴当前位置
+volatile float UpLocation;//y轴当前位置
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -68,27 +75,30 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-float GetDownLocation(void)
-{
-    float result;
-    if(DownMotorLocateDataGetFlag == 1)
-    {
-        DownMotorLocateDataGetFlag = 0;
-        
-        if(DownMotorLocation_Array[0] == 0x00)
-        { 
-            result =  (DownMotorLocation * 360) / 65536;
-        }
-        else if(DownMotorLocation_Array[0] == 0x01)
-        {
-            result = -(DownMotorLocation * 360) / 65536;
-            
-        }
-        OLED_ShowFloatNum(0 ,  32 , result , 8 , 1 ,  OLED_8X16);
-        return result;
-    }
-    else return 0 ;
-}
+
+// int GetDownLocation(void)
+// {
+//     int result;
+//     if (DownMotorLocateDataGetFlag == 1)
+//     {
+//         DownMotorLocateDataGetFlag = 0;
+
+//         if (DownMotorLocation_Array[0] == 0x00)
+//         {
+//             result = (DownMotorLocation * 360) / 65536;
+//         }
+//         else if (DownMotorLocation_Array[0] == 0x01)
+//         {
+//             result = -(DownMotorLocation * 360) / 65536;
+//         }
+
+//         OLED_ShowSignedNum(0, 32, result, 8,OLED_8X16);
+
+//         return result;
+//     }
+//     else
+//         return 0;
+// }
 
 /* USER CODE END 0 */
 
@@ -124,11 +134,14 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
-  MX_TIM2_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
     LL_USART_EnableIT_RXNE(USART1);
     LL_USART_EnableIT_RXNE(USART2);
     LL_USART_EnableIT_RXNE(USART3);
+
+    HAL_TIM_Base_Start_IT(&htim3); // 使能定时器中断
+    // HAL_NVIC_EnableIRQ(TIM3_IRQn);  // 使能定时器2的中断
 
     // LL_USART_ClearFlag_RXNE(USART2);
     // LL_USART_EnableIT_RXNE(USART2);
@@ -138,44 +151,150 @@ int main(void)
     uint8_t Header[] = {0xAA, 0x55}; // 包头
     float Data[1] = {3.14};          // 3FA3D70A 4048F5C3
     Serial_Registration(&Usart1, USART1);
-    Serial_Registration(&Usart2, USART2); // PA2->RX PA3->TX
-    Serial_Registration(&Usart3, USART3); // PA2->RX PA3->TX
-    Serial_PackTranAgrDecide(&Usart1, 2, Header);//PB10 -> RX PB11 -> TX
-    volatile float DownLocation;
+    Serial_SetLogLevel(&Usart1, LogInfo);
+    Serial_Registration(&Usart2, USART2);
+    Serial_SetLogLevel(&Usart2, LogShutDown); // PA2->RX PA3->TX CW顺时针 CCW逆时针
+    Serial_Registration(&Usart3, USART3);     // PB10 -> RX PB11 -> TX
+    Serial_SetLogLevel(&Usart3, LogShutDown); 
+    // Serial_PackTranAgrDecide(&Usart1, 2, Header);
+    
+    
+    Emm_V5_Pos_DownControl(&Usart2, 0x02, CW, 0, 0, false);
+    HAL_Delay(10);
+    // HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13 , GPIO_PIN_SET);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+    
     while (1)
     {
         // 发送字符串
 
-        // HAL_GPIO_WritePin(GPIOC ,GPIO_PIN_13 , GPIO_PIN_RESET);
-
-        // Serial_Printf(&Usart1 , "Hello STM32!\r\n");
-
-        Emm_V5_Pos_DownControl(&Usart2, 0x02, CW, 0, 0, false);
+        
 
         // Serial_SendPacket_float(&Usart1 , 1 , Data , 0xFF );
 
-        HAL_Delay(10);
+        // HAL_Delay(10);
 
+        TurnDownAngle(&Usart2 , 40);
+        
 
-        // OLED_ShowString(0, 0, "Hello World", OLED_8X16);
+        // Emm_V5_GetCurrentLocation(&Usart2, 0x02);
 
-        Emm_V5_GetDownCurrentLocation(&Usart2 , 0x02);
+        // Emm_V5_GetCurrentLocation(&Usart3, 0x01);
 
-        OLED_ShowHexNum(0, 0, DownMotorLocation_Array[0], 2, OLED_8X16);
-        OLED_ShowHexNum(24, 0, DownMotorLocation_Array[1], 2, OLED_8X16);
-        OLED_ShowHexNum(48, 0, DownMotorLocation_Array[2], 2, OLED_8X16);
-        OLED_ShowHexNum(72, 0, DownMotorLocation_Array[3], 2, OLED_8X16);
-        OLED_ShowHexNum(0, 16, DownMotorLocation_Array[4], 2, OLED_8X16);
-        OLED_ShowHexNum(24, 16, DownMotorLocation_Array[5], 2, OLED_8X16);
-        // OLED_ShowHexNum(48, 16, DownMotorLocation_Array[6], 2, OLED_8X16);
-        DownLocation = GetDownLocation();
-        OLED_ShowFloatNum(0, 48, DownLocation, 8, 5, OLED_8X16);
+        OLED_ShowHexNum(0, 0, DownMotorLocation_Array[0], 2, OLED_6X8);
+        OLED_ShowHexNum(18, 0, DownMotorLocation_Array[1], 2, OLED_6X8);
+        OLED_ShowHexNum(36, 0, DownMotorLocation_Array[2], 2, OLED_6X8);
+        OLED_ShowHexNum(54, 0, DownMotorLocation_Array[3], 2, OLED_6X8);
+        OLED_ShowHexNum(72, 0, DownMotorLocation_Array[4], 2, OLED_6X8);
+        OLED_ShowHexNum(90, 0, DownMotorLocation_Array[5], 2, OLED_6X8);
+
+        OLED_ShowHexNum(0, 8, UpMotorLocation_Array[0], 2, OLED_6X8);
+        OLED_ShowHexNum(18, 8, UpMotorLocation_Array[1], 2, OLED_6X8);
+        OLED_ShowHexNum(36, 8, UpMotorLocation_Array[2], 2, OLED_6X8);
+        OLED_ShowHexNum(54, 8, UpMotorLocation_Array[3], 2, OLED_6X8);
+        OLED_ShowHexNum(72, 8, UpMotorLocation_Array[4], 2, OLED_6X8);
+        OLED_ShowHexNum(90, 8, UpMotorLocation_Array[5], 2, OLED_6X8);
+
+        if (DownMotorLocateDataGetFlag == 1)
+        {
+            DownMotorLocateDataGetFlag = 0;
+
+            if (DownMotorLocation_Array[0] == 0x00)
+            {
+                DownLocation = (DownMotorLocation * 360) / 65536;
+            }
+            else if (DownMotorLocation_Array[0] == 0x01)
+            {
+                DownLocation = -(DownMotorLocation * 360) / 65536;
+            }
+
+            OLED_ShowFloatNum(0, 16, DownLocation / 10, 8, 2, OLED_6X8);
+        }
+
+        if (UpMotorLocateDataGetFlag == 1)
+        {
+            UpMotorLocateDataGetFlag = 0;
+
+            if (UpMotorLocation_Array[0] == 0x00)
+            {
+                UpLocation = (UpMotorLocation * 360) / 65536;
+            }
+            else if (UpMotorLocation_Array[0] == 0x01)
+            {
+                UpLocation = -(UpMotorLocation * 360) / 65536;
+            }
+
+            OLED_ShowFloatNum(0, 24, UpLocation / 5, 8, 2, OLED_6X8);
+        }
+
+        // OLED_ShowNum(0 , 40 , oledupdate_state , 1 , OLED_6X8);
         OLED_Update();
+        
+        
+        if (oledupdate_state == 1)
+        {
+            oledupdate_state = 0;
+            Emm_V5_GetCurrentLocation(&Usart2, 0x02);
 
+            Emm_V5_GetCurrentLocation(&Usart3, 0x01);
+        }
+        if(TurningUpdate_state == 1)
+        {
+            TurningUpdate_state == 0;
+            if (DownMoveState == 0)
+            {
+                
+                if (fabs(DownLocation / 10) >= DownTagectAngle)
+                {
+                    DownTagectAngle = 0;
+                    DownMoveState = 1;
+                    Emm_V5_Pos_DownControl(&Usart2, 0x02, CW, 0, 0, false);
+                    OLED_ShowString(0 , 32 , "Done!" , OLED_6X8);
+                }
+                else
+                {
+                    if(DownLocation >= 0)//顺时针
+                    {
+                        Emm_V5_Pos_DownControl(&Usart2, 0x02, CW, 200, 0, false);
+                    }
+                    else if(DownLocation < 0)
+                    {
+                        Emm_V5_Pos_DownControl(&Usart2, 0x02, CCW, 200, 0, false);
+                    }
+                    // Emm_V5_Pos_DownControl(&Usart2, 0x02, CW, 100, 0, false);
+                }
+            }
+        }
+        if(TurningDowndate_state == 1)
+        {
+            TurningDowndate_state == 0;
+            if (DownMoveState == 0)
+            {
+                
+                if (fabs(DownLocation / 10) >= DownTagectAngle)
+                {
+                    DownTagectAngle = 0;
+                    DownMoveState = 1;
+                    Emm_V5_Pos_DownControl(&Usart2, 0x02, CW, 0, 0, false);
+                    OLED_ShowString(0 , 32 , "Done!" , OLED_6X8);
+                }
+                else
+                {
+                    if(DownLocation >= 0)//顺时针
+                    {
+                        Emm_V5_Pos_DownControl(&Usart2, 0x02, CW, 200, 0, false);
+                    }
+                    else if(DownLocation < 0)
+                    {
+                        Emm_V5_Pos_DownControl(&Usart2, 0x02, CCW, 200, 0, false);
+                    }
+                    // Emm_V5_Pos_DownControl(&Usart2, 0x02, CW, 100, 0, false);
+                }
+            }
+        }
         // // 延时
         // for (volatile uint32_t i = 0; i < 1000000; i++)
         //   ;

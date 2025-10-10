@@ -6,7 +6,7 @@
             "type": "shell",
             "command": "openocd",
             "args": [
-                "-f", "interface/stlink.cfg",
+                "-f", "interface/cmsis-dap.cfg",
                 "-c", "adapter speed 4000",
                 "-f", "target/stm32f1x.cfg",
                 "-c", "init; reset; exit"
@@ -21,11 +21,27 @@
             "type": "shell",
             "command": "openocd",
             "args": [
-                "-f", "interface/stlink.cfg",//切换daplink cmsis-dap.cfg stlink.cfg
+                "-f", "interface/cmsis-dap.cfg",//切换daplink cmsis-dap.cfg stlink.cfg
                 "-c", "adapter speed 1000", // 添加速度设置
                 "-f", "target/stm32f1x.cfg",
                 "-c", "program build/Debug/${workspaceFolderBasename}.elf verify reset exit"
             ],
+            "group": "build"
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "cmake --build ${workspaceFolder}\\build\\Debug",  // 指定编译目录
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "flash",
+            "type": "shell",
+            "command": "openocd -f interface/cmsis-dap.cfg -f target/stm32f1x.cfg -c \"program build/Debug/${workspaceFolderBasename}.elf verify reset exit\"",
+            "problemMatcher": [],
             "group": "build"
         }
         

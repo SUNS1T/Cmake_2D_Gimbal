@@ -17,39 +17,39 @@ void PID_Init(struct Pid *PID , float P , float I , float D , float Time)
 }
 
 /*
-    函数:Left_RTIncrePIDValue
+    函数:Up_RTIncrePIDValue
     参数:struct PID *PID 初始化的PID结构体  int TargetVelocity 目标值 int CurrentVelocity 当前值值 int GetGroup 使用存储数据的组数
     返回值:返回增量式PID的控制值
     特殊:和上一次的值相加左轮的值
 */
-float Left_RTIncrePIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity )
+float Up_RTIncrePIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity )
 {
-	float static LeftIncrePreviousBias , LeftIncreLastBias ;
-	float LeftIncreError = TargetVelocity - CurrentVelocity;
-	float Left_IncreSum = PID->Kp * ( LeftIncreError - LeftIncreLastBias ) + PID->Ki * LeftIncreError* PID->Time + PID->Kd * ( LeftIncreError - 2 * LeftIncreLastBias + LeftIncrePreviousBias ) / PID->Time;  
-	LeftIncrePreviousBias = LeftIncreLastBias;
-	LeftIncreLastBias = LeftIncreError;	
+	float static UpIncrePreviousBias , UpIncreLastBias ;
+	float UpIncreError = TargetVelocity - CurrentVelocity;
+	float Up_IncreSum = PID->Kp * ( UpIncreError - UpIncreLastBias ) + PID->Ki * UpIncreError* PID->Time + PID->Kd * ( UpIncreError - 2 * UpIncreLastBias + UpIncrePreviousBias ) / PID->Time;  
+	UpIncrePreviousBias = UpIncreLastBias;
+	UpIncreLastBias = UpIncreError;	
 	
-	return Left_IncreSum;
+	return Up_IncreSum;
 }
 
 /*
-    函数:Right_RTIncrePIDValue
+    函数:Down_RTIncrePIDValue
     参数:struct PID *PID 初始化的PID结构体  int TargetVelocity 目标值 int CurrentVelocity 当前值值 int GetGroup 使用存储数据的组数
     返回值:返回增量式PID的控制值
     特殊:和上一次的值相加右轮的值
 */
-float Right_RTIncrePIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity )
+float Down_RTIncrePIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity )
 {
-	float static RightIncrePreviousBias , RightIncreLastBias ;
-	float RightIncreError = TargetVelocity - CurrentVelocity;
+	float static DownIncrePreviousBias , DownIncreLastBias ;
+	float DownIncreError = TargetVelocity - CurrentVelocity;
 	
-	float Right_IncreSum = PID->Kp * ( RightIncreError - RightIncreLastBias ) + PID->Ki * RightIncreError * PID->Time + PID->Kd * ( RightIncreError - 2 * RightIncreLastBias + RightIncrePreviousBias ) / PID->Time;  
+	float Down_IncreSum = PID->Kp * ( DownIncreError - DownIncreLastBias ) + PID->Ki * DownIncreError * PID->Time + PID->Kd * ( DownIncreError - 2 * DownIncreLastBias + DownIncrePreviousBias ) / PID->Time;  
 	
-	RightIncrePreviousBias = RightIncreLastBias;
-	RightIncreLastBias = RightIncreError;	
+	DownIncrePreviousBias = DownIncreLastBias;
+	DownIncreLastBias = DownIncreError;	
 	
-	return Right_IncreSum;
+	return Down_IncreSum;
 }
 
 /*
@@ -58,35 +58,7 @@ float Right_RTIncrePIDValue(struct Pid *PID , float TargetVelocity, float Curren
     返回值:返回位置式PID的控制值
     特殊:无
 */
-float Left_RTPositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity )
-{
-
-	PID->CurrentBias = TargetVelocity - CurrentVelocity;
-	PID->Error_Sum += PID->CurrentBias * PID->Time;
-//	/*-------------积分限幅-------------*/
-//	if(PID->Error_Sum > 500)
-//	{
-//		PID->Error_Sum = 500;
-//	}
-//	else if(PID->Error_Sum < -500)
-//	{
-//		PID->Error_Sum = -500;
-//	}
-//	/*-------------积分限幅-------------*/
-	float ControlVelocity = PID->Kp * PID->CurrentBias + PID->Ki * PID->Error_Sum +PID->Kd * ( PID->CurrentBias - PID->Last_bias ) / PID->Time;  
-	PID->Previous_bias = PID->Last_bias;
-	PID->Last_bias = PID->CurrentBias;
-
-	return ControlVelocity;
-}
-
-/*
-    函数:RTPositPIDValue
-    参数:struct PID *PID 初始化的PID结构体  int TargetVelocity 目标值 int CurrentVelocity 当前值 int GetGroup 使用存储数据的组数
-    返回值:返回位置式PID的控制值
-    特殊:无
-*/
-float Right_RTPositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity )
+float Up_RTPositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity )
 {
 
 	PID->CurrentBias = TargetVelocity - CurrentVelocity;
@@ -108,14 +80,13 @@ float Right_RTPositPIDValue(struct Pid *PID , float TargetVelocity, float Curren
 	return ControlVelocity;
 }
 
-
 /*
     函数:RTPositPIDValue
     参数:struct PID *PID 初始化的PID结构体  int TargetVelocity 目标值 int CurrentVelocity 当前值 int GetGroup 使用存储数据的组数
     返回值:返回位置式PID的控制值
     特殊:无
 */
-float Right_AnglePositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity )
+float Down_RTPositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity )
 {
 
 	PID->CurrentBias = TargetVelocity - CurrentVelocity;
@@ -144,7 +115,36 @@ float Right_AnglePositPIDValue(struct Pid *PID , float TargetVelocity, float Cur
     返回值:返回位置式PID的控制值
     特殊:无
 */
-float Left_AnglePositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity )
+float Down_AnglePositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity )
+{
+
+	PID->CurrentBias = TargetVelocity - CurrentVelocity;
+	PID->Error_Sum += PID->CurrentBias * PID->Time;
+//	/*-------------积分限幅-------------*/
+//	if(PID->Error_Sum > 500)
+//	{
+//		PID->Error_Sum = 500;
+//	}
+//	else if(PID->Error_Sum < -500)
+//	{
+//		PID->Error_Sum = -500;
+//	}
+//	/*-------------积分限幅-------------*/
+	float ControlVelocity = PID->Kp * PID->CurrentBias + PID->Ki * PID->Error_Sum +PID->Kd * ( PID->CurrentBias - PID->Last_bias ) / PID->Time;  
+	PID->Previous_bias = PID->Last_bias;
+	PID->Last_bias = PID->CurrentBias;
+
+	return ControlVelocity;
+}
+
+
+/*
+    函数:RTPositPIDValue
+    参数:struct PID *PID 初始化的PID结构体  int TargetVelocity 目标值 int CurrentVelocity 当前值 int GetGroup 使用存储数据的组数
+    返回值:返回位置式PID的控制值
+    特殊:无
+*/
+float Up_AnglePositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity )
 {
 
 	PID->CurrentBias = TargetVelocity - CurrentVelocity;

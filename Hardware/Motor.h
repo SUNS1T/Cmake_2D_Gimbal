@@ -7,6 +7,7 @@
 #include <stdbool.h>  
 #include "Serial.h"  
 #include <OLED.h>
+#include "Pid.h"
 
 #define CW 0x00
 #define CCW 0x01
@@ -24,10 +25,7 @@ typedef struct
     
 }MotorDataRecieve;
 
-enum 
-
-
-MotorDataRecieveSTATE{
+enum MotorDataRecieveSTATE{
     HEADER_STATE , 
     FUNC_STATE,
     SYMBOL_STATE,
@@ -48,7 +46,8 @@ void Emm_V5_Send1(struct UltraSerial *Serial , uint8_t *cmd, uint8_t len);
 
 void Emm_V5_Send2(struct UltraSerial *Serial , uint8_t *cmd, uint8_t len);
 
-void Emm_V5_GetDownCurrentLocation( struct UltraSerial *Serial , uint8_t addr);
-float GetDownLocation(void);
+void Emm_V5_GetCurrentLocation( struct UltraSerial *Serial , uint8_t addr);
 
+float TurnAnglePIDAdjust( struct UltraSerial * Serial , float current , float target );
+float TurnDownAngle(struct UltraSerial * Serial , float Angle  );
 #endif

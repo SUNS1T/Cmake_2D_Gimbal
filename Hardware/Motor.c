@@ -5,6 +5,10 @@ volatile int8_t DownMotorLocateDataGetFlag;//下面电机接收数据标志位
 volatile uint8_t UpMotorLocation_Array[6];
 volatile int32_t UpMotorLocation;
 volatile int8_t UpMotorLocateDataGetFlag;//上面电机接收数据标志位
+volatile float DownTagectAngle;
+volatile uint8_t DownMoveState = 1;//跨文件提供三种状态
+volatile float UpTagectAngle;
+volatile uint8_t UpMoveState = 1;//跨文件提供三种状态
 // uint8_t 
 
 /**
@@ -63,17 +67,15 @@ void Emm_V5_Pos_DownControl(struct UltraSerial *Serial , uint8_t addr, uint8_t d
 
 void Emm_V5_Send1(struct UltraSerial *Serial , uint8_t *cmd, uint8_t len)
 {
-    // HAL_StatusTypeDef result = HAL_UART_Transmit(&huart1,cmd, len, HAL_MAX_DELAY);
     Serial_SendArray( Serial , cmd , len);
 }
 
 void Emm_V5_Send2(struct UltraSerial *Serial , uint8_t *cmd, uint8_t len)
 {
-    // HAL_StatusTypeDef result = HAL_UART_Transmit(&huart2, cmd, len, HAL_MAX_DELAY);
     Serial_SendArray( Serial , cmd , len);
 }
 
-void Emm_V5_GetDownCurrentLocation( struct UltraSerial *Serial , uint8_t addr)//02 36 01 00 00 00 03 6B 
+void Emm_V5_GetCurrentLocation( struct UltraSerial *Serial , uint8_t addr)//02 36 01 00 00 00 03 6B 
 {
     Serial_SendByte(Serial , addr);
     Serial_SendByte(Serial , 0x36);
@@ -82,9 +84,28 @@ void Emm_V5_GetDownCurrentLocation( struct UltraSerial *Serial , uint8_t addr)//
 
 
 
+float TurnAnglePIDAdjust( struct UltraSerial * Serial , float current , float target )
+{
+    Down_RTPositPIDValue(Serial , target , current );
+}
+
+float TurnDownAngle(struct UltraSerial * Serial , float Angle  )
+{
+    if(DownMoveState == 1)
+    {
+        DownMoveState = 2;
+    }
+    if(DownMoveState == 2)
+    {
+        DownTagectAngle = Angle;
+        DownMoveState = 0;
+    }   
+        
+}
+
 void USART2_IRQHandler(void)//
 {
-    static uint8_t RxDataFlag = 0 , DataRecieveState = 0 , DataSymbol = 0; 
+    static uint8_t RxDataFlag = 0 , DataRecieveState = 0 ; 
     // uint8_t decimal_value = 0;
     
     if (LL_USART_IsActiveFlag_RXNE(USART2))  // 判断接收中断标志
@@ -230,5 +251,43 @@ void USART2_IRQHandler(void)//
 
 void USART3_IRQHandler(void)
 {
+    static uint8_t RxDataFlag = 0 , DataRecieveState = 0 ; 
+    // uint8_t decimal_value = 0;
+    
+    if (LL_USART_IsActiveFlag_RXNE(USART3))  // 判断接收中断标志
+    {
+        uint8_t received_data = LL_USART_ReceiveData8(USART3);  // 读取接收到的数据
+        
+        if(DataRecieveState == 0)
+        {
+            if(received_data == 0x01)
+            {
+                DataRecieveState = 1;
+            }
+        }
+        else if(DataRecieveState == 1)
+        {
+            if(received_data == 0x36)
+            {
+                DataRecieveState = 2;
+            }
+            else{
+                DataRecieveState = 1;
+            }
+        }
+        else if(DataRecieveState == 2)
+        {
+            UpMotorLocation_Array[RxDataFlag] = received_data;
+            RxDataFlag++;
+            if(RxDataFlag >= 6)
+            {
+                UpMotorLocation = (UpMotorLocation_Array[1] << 24) | (UpMotorLocation_Array[2] << 16) | (UpMotorLocation_Array[3] << 8) | UpMotorLocation_Array[4];
+                UpMotorLocateDataGetFlag = 1;
+                DataRecieveState = 0;
+                RxDataFlag = 0;
+            }
+        }
+    }
+
 
 }

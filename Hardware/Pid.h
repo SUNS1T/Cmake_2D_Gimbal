@@ -17,12 +17,12 @@ struct Pid
 
 void PID_Init(struct Pid *PID , float P , float I , float D , float Time);
 
-float Left_RTIncrePIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity );
-float Right_RTIncrePIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity );
-float Left_RTPositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity );
-float Right_RTPositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity );
+float Up_RTIncrePIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity );
+float Down_RTIncrePIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity );
+float Up_RTPositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity );
+float Down_RTPositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity );
 
-float Right_AnglePositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity );
-float Left_AnglePositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity );
+float Down_AnglePositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity );
+float Up_AnglePositPIDValue(struct Pid *PID , float TargetVelocity, float CurrentVelocity );
 
 #endif

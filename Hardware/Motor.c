@@ -9,6 +9,11 @@ volatile float DownTagectAngle;
 volatile uint8_t DownMoveState = 1;//跨文件提供三种状态
 volatile float UpTagectAngle;
 volatile uint8_t UpMoveState = 1;//跨文件提供三种状态
+
+float UpCurrentAngle;//记录当前角度，用于归零
+float DownCurrentAngle;//记录当前角度，用于归零
+extern volatile float DownLocation; // x轴当前位置
+extern volatile float UpLocation;   // y轴当前位置
 // uint8_t 
 
 /**
@@ -40,6 +45,7 @@ void Emm_V5_Pos_UpControl(struct UltraSerial *Serial , uint8_t addr, uint8_t dir
 
 /**
  * @brief    位置模式
+ * 
  * @param    addr：电机地址
  * @param    dir ：方向        ，0为CW，其余值为CCW
  * @param    vel ：速度(RPM)   ，范围0 - 5000RPM
@@ -84,12 +90,12 @@ void Emm_V5_GetCurrentLocation( struct UltraSerial *Serial , uint8_t addr)//02 3
 
 
 
-float TurnAnglePIDAdjust( struct UltraSerial * Serial , float current , float target )
-{
-    Down_RTPositPIDValue(Serial , target , current );
-}
+// float TurnAnglePIDAdjust( struct UltraSerial * Serial , float current , float target )
+// {
+//     Down_RTPositPIDValue(Serial , target , current );
+// }
 
-float TurnDownAngle(struct UltraSerial * Serial , float Angle  )
+void TurnDownAngle(struct UltraSerial * Serial , float Angle  )
 {
     if(DownMoveState == 1)
     {
@@ -100,7 +106,50 @@ float TurnDownAngle(struct UltraSerial * Serial , float Angle  )
         DownTagectAngle = Angle;
         DownMoveState = 0;
     }   
+}
+
+void TurnUpAngle(struct UltraSerial * Serial , float Angle  )
+{
+    if(UpMoveState == 1)
+    {
+        UpMoveState = 2;
+    }
+    if(UpMoveState == 2)
+    {
+        UpTagectAngle = Angle;
+        UpMoveState = 0;
+    }   
         
+}
+
+void SetUpCurrentAngle_0(void)
+{
+    UpCurrentAngle = UpLocation;
+    UpLocation = 0;//将当前的角度清零以继续使用
+}
+
+void SetDownCurrentAngle_0(void)
+{
+    DownCurrentAngle = DownLocation;
+    DownLocation = 0;//将当前的角度清零以继续使用
+}
+
+uint8_t GetUpMotorState(void)
+{
+    if(UpTagectAngle == 0 && UpMoveState == 1)
+    {
+        return Ready;
+    }
+    return Unready;
+}
+
+uint8_t GetDownMotorState(void)
+{
+    if(DownTagectAngle == 0 && DownMoveState == 1)
+    {
+        return Ready;
+    }
+    return Unready;
 }
 
 void USART2_IRQHandler(void)//

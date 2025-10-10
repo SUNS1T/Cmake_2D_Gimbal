@@ -12,6 +12,8 @@
 #define CW 0x00
 #define CCW 0x01
 
+#define Ready 0x01
+#define Unready 0x00
 
 
 typedef struct 
@@ -49,5 +51,10 @@ void Emm_V5_Send2(struct UltraSerial *Serial , uint8_t *cmd, uint8_t len);
 void Emm_V5_GetCurrentLocation( struct UltraSerial *Serial , uint8_t addr);
 
 float TurnAnglePIDAdjust( struct UltraSerial * Serial , float current , float target );
-float TurnDownAngle(struct UltraSerial * Serial , float Angle  );
+void TurnDownAngle(struct UltraSerial * Serial , float Angle  );
+void TurnUpAngle(struct UltraSerial * Serial , float Angle  );
+uint8_t GetUpMotorState(void);
+uint8_t GetDownMotorState(void);
+void SetUpCurrentAngle_0(void);
+void SetDownCurrentAngle_0(void);
 #endif

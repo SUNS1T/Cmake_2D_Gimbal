@@ -22,6 +22,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -33,12 +34,12 @@
 #include "OLED.h"
 #include "Timer.h"
 #include "math.h"
+#include "Pid.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define UpAdr 0x01
-#define DownAdr 0x02
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -60,15 +61,27 @@ extern volatile int8_t DownMotorLocateDataGetFlag; // 下面电机接收数据�
 extern volatile uint8_t UpMotorLocation_Array[6];
 extern volatile int32_t UpMotorLocation;
 extern volatile int8_t UpMotorLocateDataGetFlag; // 上面电机接收数据标志位
+
 struct UltraSerial Usart1, Usart2, Usart3;       // 初始化3种串口
+struct Pid UpMotor_Pid = { 0 } , DownMotor_Pid = { 0 } ;
+
 extern volatile int oledupdate_state;
-extern volatile int TurningUpdate_state;
-extern volatile int TurningDowndate_state;
+// extern volatile int TurningUpdate_state;
+// extern volatile int TurningDowndate_state;
+extern volatile int date_state;
 volatile float DownLocation; // x轴当前位置
 volatile float UpLocation;   // y轴当前位置
 
 extern float UpCurrentAngle;   // 记录当前角度，用于归零
 extern float DownCurrentAngle; // 记录当前角度，用于归零
+
+
+/*提取串口读到的数据*/
+extern float fRxData[8];
+extern double dRxData[4];
+extern int32_t iRxData[8];
+
+extern UART_DAT dat_Uart1;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -135,6 +148,7 @@ int main(void)
 
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
+    MX_DMA_Init();
     MX_USART1_UART_Init();
     MX_USART2_UART_Init();
     MX_USART3_UART_Init();
@@ -151,20 +165,27 @@ int main(void)
 
     OLED_Init();
 
-    uint8_t Header[] = {0xAA, 0x55}; // 包头
-    float Data[1] = {3.14};          // 3FA3D70A 4048F5C3
     Serial_Registration(&Usart1, USART1);
-    Serial_SetLogLevel(&Usart1, LogInfo);
+    // Serial_SetLogLevel(&Usart1, LogInfo);
     Serial_Registration(&Usart2, USART2);
-    Serial_SetLogLevel(&Usart2, LogShutDown); // PA2->RX PA3->TX CW顺时针 CCW逆时针
-    Serial_Registration(&Usart3, USART3);     // PB10 -> RX PB11 -> TX
+    Serial_SetLogLevel(&Usart2, LogShutDown); // PA2->RX PA3->TX CW顺时针 CCW逆时针 --->Down
+    Serial_Registration(&Usart3, USART3);     // PB10 -> RX PB11 -> TX --->Up
     Serial_SetLogLevel(&Usart3, LogShutDown);
-    static int Turnstate = 0 , avoid = 0;
-    // Serial_PackTranAgrDecide(&Usart1, 2, Header);
 
-    // Emm_V5_Pos_DownControl(&Usart2, 0x02, CW, 0, 0, false);
-    HAL_Delay(10);
-    // HAL_GPIO_WritePin(GPI*OC,GPIO_PIN_13 , GPIO_PIN_SET);
+    PID_Init(&UpMotor_Pid , 1.0 , 0 , 0 , 0.001);
+    PID_Init(&DownMotor_Pid , 1.0 , 0 , 0 , 0.001);
+
+    uint8_t Header[] = {0xAA, 0x55}; // 包头
+    float Data[2] = {723.2231 , 412.4326};          // 3FA3D70A 4048F5C3
+    UartVarInit();
+    InitHardUart();
+    Serial_PackTranAgrDecide(&Usart1, 2, Header);
+    Serial_SendPacket_float(&Usart1, 2, &Data, 0x01);
+    static int Turnstate = 0, avoid = 0;
+
+    // Serial_SendPacket_float(&Usart1 , 1 , Data , 0xFF );
+
+    // AA 55 FF FF 03 04 C3 F5 48 40 FF
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -174,60 +195,31 @@ int main(void)
     {
         // 发送字符串
 
-        // Serial_SendPacket_float(&Usart1 , 1 , Data , 0xFF );
-
-        // HAL_Delay(10);
-
-        
-        
-        if(Turnstate == 0)
+        if (dat_Uart1.FLG)
         {
-            if(avoid == 1)
-            {
-                if (GetUpMotorState() == Ready && GetDownMotorState() == Ready)
-                {
-                    Turnstate = 1;
-                    OLED_ShowString(0, 48, "[Info->State]:Second", OLED_6X8);
-                }
-            }
-            TurnDownAngle(&Usart2, -20);
-            TurnUpAngle(&Usart3, 20);
-            avoid = 1;
+            Serial_DataDeal();
+            OLED_ShowFloatNum(0 , 56 , fRxData[0] , 3 , 4 , OLED_6X8 );
+            OLED_ShowFloatNum(64 , 56 , fRxData[1] , 3 , 4 , OLED_6X8 );
         }
-        else if(Turnstate == 1)
-        {
-            TurnDownAngle(&Usart2, -40);
-            TurnUpAngle(&Usart3, 40);
-        }
-        
-        
-        
-        // if(Turnstate == 0)
+
+        // if (Turnstate == 0)
         // {
-        //     if(GetUpMotorState() == Ready && GetDownMotorState() == Ready )
+        //     if (avoid == 1)
         //     {
-        //         Turnstate = 1;
+        //         if (GetUpMotorState() == Ready && GetDownMotorState() == Ready)
+        //         {
+        //             Turnstate = 1;
+        //             OLED_ShowString(0, 48, "[Info->State]:Second", OLED_6X8);
+        //         }
         //     }
-        //     else
-        //     {
-        //         TurnDownAngle(&Usart2 , -20);
-        //         TurnUpAngle(&Usart3, 20);
-        //     }
-
-        //     OLED_ShowString(0, 48, "[Info->Move1]:Done!", OLED_6X8);
+        //     TurnDownAngle(&Usart2, -20);
+        //     TurnUpAngle(&Usart3, 20);
+        //     avoid = 1;
         // }
-        // else if(Turnstate == 1)
+        // else if (Turnstate == 1)
         // {
-        //     if(GetUpMotorState() == Ready && GetDownMotorState() == Ready )
-        //     {
-        //         Turnstate = 2;
-        //     }
-        //     else
-        //     {
-        //         TurnDownAngle(&Usart2 , 20);
-        //         TurnUpAngle(&Usart3, -20);
-        //     }
-        //     OLED_ShowString(0, 48, "[Info->Move2]:Done!", OLED_6X8);
+        //     TurnDownAngle(&Usart2, -40);
+        //     TurnUpAngle(&Usart3, 40);
         // }
 
         OLED_ShowHexNum(0, 0, DownMotorLocation_Array[0], 2, OLED_6X8);
@@ -286,61 +278,67 @@ int main(void)
 
             Emm_V5_GetCurrentLocation(&Usart3, UpAdr);
             OLED_Update();
-        }
 
-        if (TurningDowndate_state == 1) // x轴电机控制
+        }
+        if(date_state == 1)
         {
-            TurningDowndate_state = 0;
-            if (DownMoveState == 0)
-            {
+            date_state = 0;
 
-                if (fabs(DownLocation) >= fabs(DownTagectAngle))
-                {
-                    DownTagectAngle = 0;
-                    DownMoveState = 1;
-                    Emm_V5_Pos_DownControl(&Usart2, DownAdr, CW, 0, 0, false);
-                    OLED_ShowString(0, 32, "[Info->Down]:Done!", OLED_6X8);
-                    SetDownCurrentAngle_0();//伪清除，如需要调零这个功能后期需要更改
-                }
-                else
-                {
-                    if (DownTagectAngle >= 0) // 顺时针
-                    {
-                        Emm_V5_Pos_DownControl(&Usart2, DownAdr, CW, 200, 0, false);
-                    }
-                    else if (DownTagectAngle < 0)
-                    {
-                        Emm_V5_Pos_DownControl(&Usart2, DownAdr, CCW, 200, 0, false);
-                    }
-                }
-            }
         }
-        if (TurningUpdate_state == 1) // y轴电机控制
-        {
-            TurningUpdate_state = 0;
-            if (UpMoveState == 0)
-            {
-                if (fabs(UpLocation) >= fabs(UpTagectAngle))
-                {
-                    UpTagectAngle = 0;
-                    UpMoveState = 1;
-                    Emm_V5_Pos_UpControl(&Usart3, UpAdr, CW, 0, 0, false);
-                    OLED_ShowString(0, 40, "[Info->Up]:Done!", OLED_6X8);
-                    SetUpCurrentAngle_0();//伪清除，如需要调零这个功能后期需要更改
-                }
-                else
-                {
-                    if (UpTagectAngle >= 0) // 顺时针
-                    {
-                        Emm_V5_Pos_UpControl(&Usart3, UpAdr, CW, 150, 0, false);
-                    }
-                    else if (UpTagectAngle < 0)
-                    {
-                        Emm_V5_Pos_UpControl(&Usart3, UpAdr, CCW, 150, 0, false);
-                    }
-                }
-            }
-        }
+        // if (TurningDowndate_state == 1) // x轴电机控制
+        // {
+
+        //     TurningDowndate_state = 0;
+        //     if (DownMoveState == 0)
+        //     {
+
+        //         if (fabs(DownLocation) >= fabs(DownTagectAngle))
+        //         {
+        //             DownTagectAngle = 0;
+        //             DownMoveState = 1;
+        //             Emm_V5_Vel_DownControl(&Usart2, DownAdr, CW, 0, 0, false);
+        //             OLED_ShowString(0, 32, "[Info->Down]:Done!", OLED_6X8);
+        //             SetDownCurrentAngle_0(); // 伪清除，如需要调零这个功能后期需要更改
+        //         }
+        //         else
+        //         {
+        //             if (DownTagectAngle >= 0) // 顺时针
+        //             {
+        //                 Emm_V5_Vel_DownControl(&Usart2, DownAdr, CW, 200, 0, false);
+        //             }
+        //             else if (DownTagectAngle < 0)
+        //             {
+        //                 Emm_V5_Vel_DownControl(&Usart2, DownAdr, CCW, 200, 0, false);
+        //             }
+        //         }
+        //     }
+        // }
+        // if (TurningUpdate_state == 1) // y轴电机控制
+        // {
+        //     TurningUpdate_state = 0;
+        //     if (UpMoveState == 0)
+        //     {
+        //         if (fabs(UpLocation) >= fabs(UpTagectAngle))
+        //         {
+        //             UpTagectAngle = 0;
+        //             UpMoveState = 1;
+        //             Emm_V5_Vel_UpControl(&Usart3, UpAdr, CW, 0, 0, false);
+        //             OLED_ShowString(0, 40, "[Info->Up]:Done!", OLED_6X8);
+        //             SetUpCurrentAngle_0(); // 伪清除，如需要调零这个功能后期需要更改
+        //         }
+        //         else
+        //         {
+        //             if (UpTagectAngle >= 0) // 顺时针
+        //             {
+        //                 Emm_V5_Vel_UpControl(&Usart3, UpAdr, CW, 150, 0, false);
+        //             }
+        //             else if (UpTagectAngle < 0)
+        //             {
+        //                 Emm_V5_Vel_UpControl(&Usart3, UpAdr, CCW, 150, 0, false);
+        //             }
+        //         }
+        //     }
+        // }
         /*----------------------------中断控制部分----------------------------*/
         /* USER CODE END WHILE */
 

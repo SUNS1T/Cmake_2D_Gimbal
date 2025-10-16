@@ -1,8 +1,9 @@
 #include "Timer.h"
 
 volatile int oledupdate_state;
-volatile int TurningUpdate_state;
-volatile int TurningDowndate_state;
+// volatile int TurningUpdate_state;
+// volatile int TurningDowndate_state;
+volatile int date_state;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -21,8 +22,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         }
         if (last_count % 25 == 0)
         {
-            TurningUpdate_state = 1;
-            TurningDowndate_state = 1;
+            // TurningUpdate_state = 1;
+            // TurningDowndate_state = 1;
+            date_state = 1;
         }
     }
 

@@ -15,6 +15,8 @@
 #define Ready 0x01
 #define Unready 0x00
 
+#define UpAdr 0x01
+#define DownAdr 0x02
 
 typedef struct 
 {
@@ -38,9 +40,9 @@ enum MotorDataRecieveSTATE{
 
 
 // 函数声明
-void Emm_V5_Pos_DownControl(struct UltraSerial *Serial , uint8_t addr, uint8_t dir, uint16_t vel, uint8_t acc, bool snF);
+void Emm_V5_Vel_DownControl(struct UltraSerial *Serial , uint8_t addr, uint8_t dir, uint16_t vel, uint8_t acc, bool snF);
 
-void Emm_V5_Pos_UpControl(struct UltraSerial *Serial , uint8_t addr, uint8_t dir, uint16_t vel, uint8_t acc, bool snF);
+void Emm_V5_Vel_UpControl(struct UltraSerial *Serial , uint8_t addr, uint8_t dir, uint16_t vel, uint8_t acc, bool snF);
 
 
 // 发送函数
@@ -57,4 +59,7 @@ uint8_t GetUpMotorState(void);
 uint8_t GetDownMotorState(void);
 void SetUpCurrentAngle_0(void);
 void SetDownCurrentAngle_0(void);
+void Motor_TargetAngleControl( );
+void Emm_V5_Pos_UpControl(struct UltraSerial *Serial, uint8_t addr, uint8_t dir, uint16_t vel, uint8_t acc, uint32_t clk, bool raF, bool snF);
+void Emm_V5_Pos_DownControl(struct UltraSerial *Serial, uint8_t addr, uint8_t dir, uint16_t vel, uint8_t acc, uint32_t clk, bool raF, bool snF);
 #endif

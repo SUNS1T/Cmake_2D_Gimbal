@@ -43,7 +43,7 @@ add_executable(${CMAKE_PROJECT_NAME}
     Hardware/OLED.c
     Hardware/OLED.h
     Hardware/Pid.h
-    Hardware/Pid.h
+    Hardware/Pid.c
     Hardware/Timer.c
     Hardware/Timer.h
 )

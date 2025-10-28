@@ -6,6 +6,7 @@
 #include "stdarg.h"
 #include "stdio.h"
 #include "string.h"
+#include "OLED.h"
 
 /*与C++不同，直接使用宏定义*/
 #define LogInfo 3 

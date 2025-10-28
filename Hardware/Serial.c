@@ -237,7 +237,7 @@ uint8_t Serial_SendPacket_float(struct UltraSerial *Serial, uint8_t DataBits_, f
 
 	Serial->checksum = CalculateChecksum(CheckSum, CrcNumLength);
 
-	Serial_SendArray(&Usart1 , CheckSum , CrcNumLength);//发送数据
+	Serial_SendArray(Serial , CheckSum , CrcNumLength);//发送数据
 	Serial_SendByte(Serial, Serial->checksum);
 	// Serial_SendByte(Serial, CrcNumLength);
 	return 1;//发送成功
@@ -265,7 +265,7 @@ uint8_t Serial_SendPacket_double(struct UltraSerial *Serial, uint8_t DataBits_, 
 	memcpy(CheckSum + Serial->headerlen + 4, Serial->data.rawData, DataLength);
 
 	CheckValue = CalculateChecksum(CheckSum, sizeof(CheckSum));
-	Serial_SendArray(&Usart1 , CheckSum , CrcNumLength);//发送数据
+	Serial_SendArray(Serial , CheckSum , CrcNumLength);//发送数据
 	
 	Serial_SendByte(Serial, CheckValue);
 	return 1;//发送成功
@@ -314,6 +314,7 @@ struct UltraSerialDataDeal frame = {0};//用于数据处理，严禁私调
 float fRxData[8];
 double dRxData[4];
 int32_t iRxData[8];
+volatile uint8_t Func_;
 
 void UartVarInit(void)
 {
@@ -406,6 +407,8 @@ void Serial_DataDeal(void) // 将数据转存到结构体中存储
             default:
                 break;
             }
+			Func_ = dat_Uart1.pRxBuf[HEADERLENGTH];
+			
         }
         else
         {
@@ -417,11 +420,8 @@ void Serial_DataDeal(void) // 将数据转存到结构体中存储
         // Serial_SendByte(&Usart1 , frame.Empty1);
         // Serial_SendByte(&Usart1 , frame.datatype);
         // Serial_SendByte(&Usart1 , frame.datalength);
-
         // Serial_SendArray(&Usart1 , frame.data.rawData , datatypelength);
-
         // Serial_SendByte(&Usart1 , frame.checksum);
-
         // Serial_SendArray(&Usart1 , (uint8_t *)frame.data.fValue , sizeof(frame.data.fValue));
         /*----------调试代码----------*/
 

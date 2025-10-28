@@ -20,6 +20,11 @@
         "cmath": "c",
         "numeric": "c",
         "cstdlib": "c",
-        "timer.h": "c"
+        "timer.h": "c",
+        "stdbool.h": "c",
+        "chrono": "c",
+        "complex": "c",
+        "ratio": "c",
+        "cinttypes": "c"
     }
 }

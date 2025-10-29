@@ -1,4 +1,4 @@
-# Install script for directory: /media/sunset/本地磁盘1/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal/cmake/stm32cubemx
+# Install script for directory: /media/sunset/本地磁盘/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal/cmake/stm32cubemx
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

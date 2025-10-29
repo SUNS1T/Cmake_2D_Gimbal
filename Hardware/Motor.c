@@ -174,6 +174,24 @@ void Emm_V5_GetCurrentLocation(struct UltraSerial *Serial, uint8_t addr) // 02 3
 }
 
 /*---------发射部分---------*/
+//定义左右编码器滤波器参数
+float UpTire_alpha = 0.9259;  // 取值范围 0~1（越小滤波越强）
+float UpTire_filteredvalue = 0;
+float DownTire_alpha = 0.9259;  // 取值范围 0~1（越小滤波越强）
+float DownTire_filteredvalue = 0;
+
+float UpTirelowPassFilter(float raw_value) 
+{
+  UpTire_filteredvalue = UpTire_alpha * UpTire_filteredvalue + (1 - UpTire_alpha) * raw_value;
+  return UpTire_filteredvalue;
+}
+
+float DownTirelowPassFilter(float raw_value) 
+{
+  DownTire_filteredvalue = DownTire_alpha * DownTire_filteredvalue + (1 - DownTire_alpha) * raw_value;
+  return DownTire_filteredvalue;
+}
+
 extern uint32_t Shoot_CurrentTime;
 uint8_t HaveShoot_Flag;
 uint8_t BallPassDetect(void)
@@ -198,7 +216,7 @@ uint8_t GetGentleData(int x , int y)
     if( ( x >= -6 && x <= 6 ) && ( y >= -6 && x <= 6 ) )
     {
         DataDeal++;
-        if(DataDeal >= 10)
+        if(DataDeal >= 35)//更严谨的方法应该采集最近20次的数据进行分析，然后分析数据波动，这里简单使用迭加
         {
             DataDeal = 0 ; 
             return 1;
@@ -207,7 +225,7 @@ uint8_t GetGentleData(int x , int y)
         return 0;
 }
 
-void ShootBall(uint8_t x , uint8_t y ,uint8_t color)//挡住是0v
+uint8_t ShootBall(uint8_t x , uint8_t y ,uint8_t color)//挡住是0v
 {
     static uint8_t ShootState = 0  , lastcolor = 0;
     static uint32_t ShootTime = 0;
@@ -234,6 +252,7 @@ void ShootBall(uint8_t x , uint8_t y ,uint8_t color)//挡住是0v
             
             ShootState = 1;
             ShootTime = Shoot_CurrentTime;//获取当前时间
+            return 1;
         }
         else if(ShootState == 1)
         {
@@ -244,7 +263,7 @@ void ShootBall(uint8_t x , uint8_t y ,uint8_t color)//挡住是0v
                 OLED_ShowNum(64 , 40 , ShootTime , 8 , OLED_6X8 );
                 OLED_ShowNum(64 , 32 , Shoot_CurrentTime , 8 , OLED_6X8 );
 
-                if( Shoot_CurrentTime >= ShootTime + 2000 )//非阻塞判断，隔2s
+                if( Shoot_CurrentTime >= ShootTime + 1500 )//非阻塞判断，隔2s
                 {
                     OLED_ShowString(0 , 40 , "Un_Detect!" , OLED_6X8);
                     OLED_Update();
@@ -252,17 +271,18 @@ void ShootBall(uint8_t x , uint8_t y ,uint8_t color)//挡住是0v
                     ShootInstruction();
                 }
             }
-            else if (PhotoelectricSensorStatus == 1)//检测到当前已经发送
+            else if (PhotoelectricSensorStatus == 1 || Func_ == 0x04)//检测到当前已经发送或者是已经催促移动至下一个射击位置
             {
-                OLED_ShowString(0 , 40 , "Detect!" , OLED_6X8);
+                OLED_ShowString(0 , 40 , "Pass!" , OLED_6X8);
                 OLED_Update();
                 ShootState = 0;
                 HaveShoot_Flag = 0;
                 lastcolor = color;
-            }
+            }//0x04放弃当前发射
         }
+
     }
-    
+    return 0;
     
     
 }
@@ -270,105 +290,35 @@ void ShootBall(uint8_t x , uint8_t y ,uint8_t color)//挡住是0v
 
 /*---------发射部分---------*/
 
-void TurnMethod(int x  , int y , int Vel)
-{
-    if(y >= 0)
-    {
-        Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CCW , Vel , 0 ,  -y , false , false );//>0
-    }
-    else if(y < 0)
-    {   
-        Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CW , Vel , 0 ,  y , false , false );//<0
-    }
-    if(x >= 0)
-    {
-        Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CW, 350 , 0 ,  -x , false , false );//<0    
-    }
-    else if(x < 0)
-    {
-        Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CCW, 350 , 0 ,  x , false , false );//<0    
-    }
-    ShootBall(x , y , Func_);
-}
 
-
+/*
+    ->瞄准状态 通过pid调整
+    ->射击状态 将串口发送停止
+    ->等待状态 清除发送完成 ->回到瞄准状态
+*/
 
 void Motor_TargetAngleControl( )
 {
     OLED_ShowHexNum(64, 48, Func_ , 2, OLED_6X8);
-    float x = fRxData[0] , y = fRxData[1] + 60 , Vel = 50 , UpTargetAngle = 0 , DownTargetAngle = 0;
+    float x = fRxData[0] , y = fRxData[1] + 65 , Vel = 75 , UpTargetAngle = 0 , DownTargetAngle = 0;
+    static uint8_t StopState = 0 , ThreeStateOfShoot = 1;//StopState保证停止命令发送一次 ThreeStateOfShoot三种射击模式的状态
+    int DownVel = 1000;
+    // x = DownTirelowPassFilter(x);//一阶低通滤波处理
+    // y = UpTirelowPassFilter(y);//一阶低通滤波处理
+
     if(frame.dataframeinlaw == LEGAL)//检测包的合法性
     {
-        if(Func_ == 0x01)//黑色识别
+        if(Func_ == 0x01 || Func_ == 0x02 || Func_ == 0x03)
         {
-            UpTargetAngle = Up_RTPositPIDValue(&UpMotor_Pid_Black , 0 , y);
-            DownTargetAngle =  Down_RTPositPIDValue(&UpMotor_Pid_Black , 0 , x);
-            if(y >= 0)
+            uint8_t GetShootBall = ShootBall(x , y , Func_);
+            if (GetShootBall == 1)
             {
-                Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CCW , Vel , 0 ,  -UpTargetAngle , false , false );//>0
+                Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CCW , Vel , 0 ,  0 , false , false );//>0
+                Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CCW, DownVel , 0 ,  0 , false , false );//<0
+                ThreeStateOfShoot = 2;
             }
-            else if(y < 0)
-            {   
-                Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CW , Vel , 0 ,  UpTargetAngle , false , false );//<0
-            }
-            if(x >= 0)
-            {
-                Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CW, 350 , 0 ,  -DownTargetAngle , false , false );//<0    
-            }
-            else if(x < 0)
-            {
-                Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CCW, 350 , 0 ,  DownTargetAngle , false , false );//<0    
-            }
-            // TurnMethod( DownTargetAngle , UpTargetAngle , Vel);
-            ShootBall(x , y , Func_);
         }
-        else if(Func_ == 0x02)//绿色识别
-        {
-            UpTargetAngle = Up_RTPositPIDValue(&UpMotor_Pid_Green , 0 , y);
-            DownTargetAngle =  Down_RTPositPIDValue(&UpMotor_Pid_Green , 0 , x);
-            if(y >= 0)
-            {
-                Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CCW , Vel , 0 ,  -UpTargetAngle , false , false );//>0
-            }
-            else if(y < 0)
-            {   
-                Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CW , Vel , 0 ,  UpTargetAngle , false , false );//<0
-            }
-            if(x >= 0)
-            {
-                Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CW, 350 , 0 ,  -DownTargetAngle , false , false );//<0    
-            }
-            else if(x < 0)
-            {
-                Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CCW, 350 , 0 ,  DownTargetAngle , false , false );//<0    
-            }
-            // TurnMethod( DownTargetAngle , UpTargetAngle , Vel);
-            ShootBall(x , y , Func_);
-        }
-        else if(Func_ == 0x03)//红色识别
-        {
-            UpTargetAngle = Up_RTPositPIDValue(&UpMotor_Pid_Red , 0 , y);
-            DownTargetAngle =  Down_RTPositPIDValue(&UpMotor_Pid_Red , 0 , x);
-            if(y >= 0)
-            {
-                Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CCW , Vel , 0 ,  -UpTargetAngle , false , false );//>0
-            }
-            else if(y < 0)
-            {   
-                Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CW , Vel , 0 ,  UpTargetAngle , false , false );//<0
-            }
-            if(x >= 0)
-            {
-                Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CW, 350 , 0 ,  -DownTargetAngle , false , false );//<0    
-            }
-            else if(x < 0)
-            {
-                Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CCW, 350 , 0 ,  DownTargetAngle , false , false );//<0    
-            }
-            ShootBall(x , y , Func_);
-
-        }
-        else if(Func_ == 0x04)
+        else if(Func_ == 0x04)//这个停止的逻辑和上面状态机互不干扰    
         {
             Up_RTPositPIDValue(&UpMotor_Pid_Black , 0 , 0);
             Down_RTPositPIDValue(&UpMotor_Pid_Black , 0 , 0);
@@ -376,10 +326,93 @@ void Motor_TargetAngleControl( )
             Down_RTPositPIDValue(&UpMotor_Pid_Green , 0 , 0);
             Up_RTPositPIDValue(&UpMotor_Pid_Red , 0 , 0);
             Down_RTPositPIDValue(&UpMotor_Pid_Red , 0 , 0);
-            Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CCW , Vel , 0 ,  0 , false , false );//>0
-            Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CCW, 350 , 0 ,  0 , false , false );//<0    
-
+            if(StopState == 0)
+            {
+                // HAL_Delay(20);
+                Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CCW , Vel , 0 ,  0 , false , false );//>0
+                Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CCW, DownVel , 0 ,  0 , false , false );//<0
+                StopState = 1;    
+            }
         }
+        
+        if(ThreeStateOfShoot == 1)
+        {
+            switch (Func_)
+            {
+            case 0x01:
+                // StopState = 0;
+                UpTargetAngle = Up_RTPositPIDValue(&UpMotor_Pid_Black , 0 , y);
+                DownTargetAngle =  Down_RTPositPIDValue(&UpMotor_Pid_Black , 0 , x);
+                if(y >= 0)
+                {
+                    Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CCW , Vel , 0 ,  -UpTargetAngle , false , false );//>0
+                }
+                else if(y < 0)
+                {   
+                    Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CW , Vel , 0 ,  UpTargetAngle , false , false );//<0
+                }
+                if(x >= 0)
+                {
+                    Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CW, DownVel , 0 ,  -DownTargetAngle , false , false );//<0    
+                }
+                else if(x < 0)
+                {
+                    Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CCW, DownVel , 0 ,  DownTargetAngle , false , false );//<0    
+                }
+                break;
+            case 0x02:
+                // StopState = 0;
+                UpTargetAngle = Up_RTPositPIDValue(&UpMotor_Pid_Green , 0 , y);
+                DownTargetAngle =  Down_RTPositPIDValue(&UpMotor_Pid_Green , 0 , x);
+                if(y >= 0)
+                {
+                    Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CCW , Vel , 0 ,  -UpTargetAngle , false , false );//>0
+                }
+                else if(y < 0)
+                {   
+                    Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CW , Vel , 0 ,  UpTargetAngle , false , false );//<0
+                }
+                if(x >= 0)
+                {
+                    Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CW, DownVel , 0 ,  -DownTargetAngle , false , false );//<0    
+                }
+                else if(x < 0)
+                {
+                    Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CCW, DownVel , 0 ,  DownTargetAngle , false , false );//<0    
+                }
+                break;
+            case 0x03:
+                // StopState = 0;
+                UpTargetAngle = Up_RTPositPIDValue(&UpMotor_Pid_Red , 0 , y);
+                DownTargetAngle =  Down_RTPositPIDValue(&UpMotor_Pid_Red , 0 , x);
+                if(y >= 0)
+                {
+                    Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CCW , Vel , 0 ,  -UpTargetAngle , false , false );//>0
+                }
+                else if(y < 0)
+                {   
+                    Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CW , Vel , 0 ,  UpTargetAngle , false , false );//<0
+                }
+                if(x >= 0)
+                {
+                    Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CW, DownVel , 0 ,  -DownTargetAngle , false , false );//<0    
+                }
+                else if(x < 0)
+                {
+                    Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CCW, DownVel , 0 ,  DownTargetAngle , false , false );//<0    
+                }
+                break;
+            default:
+                break;
+            }
+        }
+        else if(ThreeStateOfShoot == 2)
+        {
+            Emm_V5_Pos_UpControl(&Usart3 , UpAdr , CCW , Vel , 0 ,  0 , false , false );//>0
+            Emm_V5_Pos_DownControl(&Usart2 , DownAdr , CCW, DownVel , 0 ,  0 , false , false );//<0
+            ThreeStateOfShoot = 1;
+        }
+        
     }  
     // 
 }

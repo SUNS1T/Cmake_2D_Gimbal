@@ -1156,8 +1156,8 @@
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "/media/sunset/\u672c\u5730\u78c1\u76d81/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal/build/Debug",
-		"source" : "/media/sunset/\u672c\u5730\u78c1\u76d81/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal"
+		"build" : "/media/sunset/\u672c\u5730\u78c1\u76d8/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal/build/Debug",
+		"source" : "/media/sunset/\u672c\u5730\u78c1\u76d8/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal"
 	},
 	"version" : 
 	{

@@ -152,12 +152,12 @@ int main(void)
     Serial_Registration(&Usart3, USART3);     // PB10 -> RX PB11 -> TX --->Up
     Serial_SetLogLevel(&Usart3, LogShutDown);
 
-    PID_Init(&UpMotor_Pid_Black, 0.7f, 0.01f, 0.0f, 0.025f);
-    PID_Init(&DownMotor_Pid_Black, 0.7f, 0.01f, 0.0f, 0.025f);
-    PID_Init(&UpMotor_Pid_Green, 0.7f, 0.01f, 0.0f, 0.025f);
-    PID_Init(&DownMotor_Pid_Green, 0.7f, 0.01f, 0.0f, 0.025f);
-    PID_Init(&UpMotor_Pid_Red, 0.7f, 0.01f, 0.0f, 0.025f);
-    PID_Init(&DownMotor_Pid_Red, 0.7f, 0.01f, 0.0f, 0.025f);
+    PID_Init(&UpMotor_Pid_Black, 0.259f, 0.01f, 0.001f, 0.025f);
+    PID_Init(&DownMotor_Pid_Black, 20.0f, 0.01f, 0.0f, 0.025f);
+    PID_Init(&UpMotor_Pid_Green, 0.259f, 0.01f, 0.001f, 0.025f);
+    PID_Init(&DownMotor_Pid_Green, 20.0f, 0.01f, 0.0f, 0.025f);
+    PID_Init(&UpMotor_Pid_Red, 0.259f, 0.01f, 0.001f, 0.025f);
+    PID_Init(&DownMotor_Pid_Red, 20.0f, 0.01f, 0.0f, 0.025f);
 
     uint8_t Header[] = {0xAA, 0x55};      // 包头
     float Data[2] = {723.2231, 412.4326}; // 3FA3D70A 4048F5C3

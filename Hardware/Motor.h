@@ -60,7 +60,9 @@ uint8_t GetUpMotorState(void);
 uint8_t GetDownMotorState(void);
 void SetUpCurrentAngle_0(void);
 void SetDownCurrentAngle_0(void);
-void Motor_TargetAngleControl( );
+void Motor_TargetAngleControl(void);
+float UpTirelowPassFilter(float raw_value);
+float DownTirelowPassFilter(float raw_value);
 void Emm_V5_Pos_UpControl(struct UltraSerial *Serial, uint8_t addr, uint8_t dir, uint16_t vel, uint8_t acc, uint32_t clk, bool raF, bool snF);
 void Emm_V5_Pos_DownControl(struct UltraSerial *Serial, uint8_t addr, uint8_t dir, uint16_t vel, uint8_t acc, uint32_t clk, bool raF, bool snF);
 #endif

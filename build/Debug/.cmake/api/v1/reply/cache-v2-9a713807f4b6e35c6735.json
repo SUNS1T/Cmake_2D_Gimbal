@@ -179,7 +179,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/media/sunset/\u672c\u5730\u78c1\u76d81/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal/build/Debug"
+			"value" : "/media/sunset/\u672c\u5730\u78c1\u76d8/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal/build/Debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -655,7 +655,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/media/sunset/\u672c\u5730\u78c1\u76d81/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal"
+			"value" : "/media/sunset/\u672c\u5730\u78c1\u76d8/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1119,7 +1119,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/media/sunset/\u672c\u5730\u78c1\u76d81/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal/cmake/gcc-arm-none-eabi.cmake"
+			"value" : "/media/sunset/\u672c\u5730\u78c1\u76d8/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal/cmake/gcc-arm-none-eabi.cmake"
 		},
 		{
 			"name" : "CMAKE_UNAME",
@@ -1159,7 +1159,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/media/sunset/\u672c\u5730\u78c1\u76d81/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal/build/Debug"
+			"value" : "/media/sunset/\u672c\u5730\u78c1\u76d8/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal/build/Debug"
 		},
 		{
 			"name" : "Cmake_2D_Gimbal_IS_TOP_LEVEL",
@@ -1183,7 +1183,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/media/sunset/\u672c\u5730\u78c1\u76d81/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal"
+			"value" : "/media/sunset/\u672c\u5730\u78c1\u76d8/keil5_project/STM32F103C8T6/HAL/NO_FreeRTos/Cmake_2D_Gimbal"
 		}
 	],
 	"kind" : "cache",
